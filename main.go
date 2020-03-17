@@ -75,50 +75,6 @@ func main() {
 		}
 	*/
 
-	//	Login 시작 (Auth 필요없음)
-	/*
-		values := types.LoginReq{
-			Type: "m.login.password",
-			Identifier: types.UserIdentifier{
-				Type: "m.id.user",
-				User: "testtest1",
-			},
-			Password:                 "testtest",
-			DeviceId:                 "testtest",
-			InitialDeviceDisplayName: "",
-		}
-
-		jsonStr, _ := json.Marshal(values)
-		req, err := http.NewRequest("POST", config.BaseUrl+"/login", bytes.NewBuffer(jsonStr))
-		if err != nil {
-			panic(err)
-		}
-		req.Header.Add("Content-Type", "application/json")
-		client := &http.Client{}
-		resp, err := client.Do(req)
-		if err != nil {
-			panic(err)
-		}
-		result := types.LoginResp{}
-		if resp.StatusCode == http.StatusOK {
-			if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-				panic(err)
-			} else {
-				fmt.Println("success")
-				fmt.Println("UserId : ", result.UserId)
-				fmt.Println("Access Token : ", result.AccessToken)
-				fmt.Println("DeviceId : ", result.DeviceId)
-				fmt.Println("Well-known : ", result.WellKnown)
-			}
-		} else {
-			data, err := ioutil.ReadAll(resp.Body)
-			if err != nil {
-				panic(err)
-			}
-			fmt.Printf("%s\n", string(data))
-		}
-
-	*/
 	// join room
 	// Default Room Id : !WMxrVkaEfBZBGZOviw%3Aplea.im
 	/*

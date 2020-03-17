@@ -41,3 +41,8 @@ func Login() (ret types.LoginResp, err error) {
 	}
 	return ret, nil
 }
+
+func Logout(accessToken string) error {
+
+	return nil
+}
