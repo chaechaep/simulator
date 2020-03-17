@@ -11,9 +11,9 @@ type Config struct {
 	AccessTokenPrefix string `json:"access_token_prefix"`
 }
 
-var Cfg Config
+var Cfg *Config
 
-func Init(fileName string) (Config, error) {
+func Init(fileName string) (*Config, error) {
 	fs, err := os.Open(fileName)
 	if err != nil {
 		fmt.Println("Load Config Failed : ", err.Error())
