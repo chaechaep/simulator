@@ -35,44 +35,7 @@ func main() {
 			}
 			fmt.Println(string(data))
 		// register 부분
-		values := types.RegisterReq{
-			Auth: types.Auth{
-				Type:    "m.login.dummy", // m.login.password 안먹힘
-				Session: "",
-			},
-			UserName:                 "testtest1",
-			Password:                 "testtest",
-			DeviceId:                 "testtest",
-			InitialDeviceDisplayName: "testdevice1",
-			InhibitLogin:             false,
-		}
-		jsonStr, _ := json.Marshal(values)
-		req, err := http.NewRequest("POST", "http://14.0.81.136:8008/_matrix/client/r0/register?kind=user", bytes.NewBuffer(jsonStr))
-		if err != nil {
-			panic(err)
-		}
-		req.Header.Add("Content-Type", "application/json")
-		client := &http.Client{}
-		resp, err = client.Do(req)
-		if err != nil {
-			panic(err)
-		}
-		if resp.StatusCode == http.StatusOK {
-			result := types.RegisterResp{}
-			if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-				panic(err)
-			} else {
-				fmt.Println("success")
-				fmt.Println(result)
-				fmt.Println("Bearer " + result.AccessToken)
-			}
-		} else {
-			data, err = ioutil.ReadAll(resp.Body)
-			if err != nil {
-				panic(err)
-			}
-			fmt.Printf("%s\n", string(data))
-		}
+
 	*/
 
 	// join room
