@@ -14,11 +14,11 @@ type Config struct {
 
 var Cfg *Config
 
-func Init(fileName string) (*Config, error) {
+func Init(fileName string) error {
 	fs, err := os.Open(fileName)
 	if err != nil {
 		fmt.Println("Load Config Failed : ", err.Error())
-		return Cfg, err
+		return err
 	}
 	defer fs.Close()
 
@@ -26,8 +26,8 @@ func Init(fileName string) (*Config, error) {
 	err = js.Decode(&Cfg)
 	if err != nil {
 		fmt.Println("config json decoding failed : ", err.Error())
-		return Cfg, err
+		return err
 	}
 
-	return Cfg, nil
+	return nil
 }

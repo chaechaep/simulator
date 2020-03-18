@@ -8,12 +8,12 @@ import (
 	"net/http"
 )
 
-func JoinRoom() (ret types.JoinRoomResp, err error) {
+func JoinRoom(user types.User) (ret types.JoinRoomResp, err error) {
 	req, err := http.NewRequest("POST", config.Cfg.BaseUrl+"/rooms/"+config.Cfg.DefaultRoomId+"/join", nil)
 	if err != nil {
 		return ret, fmt.Errorf("request create error : %s", err.Error())
 	}
-	req.Header.Add("Authorizaion", config.Cfg.AccessTokenPrefix)
+	req.Header.Add("Authorizaion", config.Cfg.AccessTokenPrefix+user.AccessToken)
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -34,13 +34,12 @@ func JoinRoom() (ret types.JoinRoomResp, err error) {
 	return ret, nil
 }
 
-func GetJoinedRooms() (ret types.JoinedRoomResp, err error) {
+func GetJoinedRooms(user types.User) (ret types.JoinedRoomResp, err error) {
 	req, err := http.NewRequest("GET", config.Cfg.BaseUrl+"/joined_rooms", nil)
 	if err != nil {
 		return ret, fmt.Errorf("request create error : %s", err.Error())
 	}
-	//Todo : User Type 생성 후 AccessToken 및 UserId 가지고 있기
-	req.Header.Add("Authorization", config.Cfg.AccessTokenPrefix)
+	req.Header.Add("Authorization", config.Cfg.AccessTokenPrefix+user.AccessToken)
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {

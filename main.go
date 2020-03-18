@@ -4,17 +4,17 @@ import (
 	"fmt"
 	config2 "github.com/CHAEUNPARK/simulator/config"
 	"github.com/CHAEUNPARK/simulator/event"
+	"github.com/CHAEUNPARK/simulator/types"
 )
 
 func main() {
 
 	confFile := "C://Users/user/GolandProjects/go/src/github.com/CHAEUNPARK/simulator/config.json"
-	config, err := config2.Init(confFile)
+	err := config2.Init(confFile)
 	if err != nil {
 		fmt.Println("config load failed : ", err)
 		return
 	}
-	fmt.Println(config)
 
 	/*
 		values := map[string]string{"msgtype": "m.text", "body": "testtest"}
@@ -34,24 +34,6 @@ func main() {
 			panic(err)
 		}
 		fmt.Println(string(data))
-
-		//	joined rooms
-		req, err = http.NewRequest("GET", config.BaseUrl+"/joined_rooms", nil)
-		if err != nil {
-			panic(err)
-		}
-		req.Header.Add("Authorization", config.AccessTokenPrefix+result.AccessToken)
-		resp, err = client.Do(req)
-		if err != nil {
-			panic(err)
-		}
-		fmt.Println(resp.StatusCode)
-		data, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			panic(err)
-		}
-		fmt.Printf("%s\n", string(data))
-		fmt.Println(url.QueryEscape(string(data)))
 	*/
 	login, err := event.Login()
 	if err != nil {
@@ -59,5 +41,11 @@ func main() {
 	}
 	fmt.Println(login.UserId)
 	fmt.Println(login.AccessToken)
+	user := types.User{
+		UserId:      login.UserId,
+		AccessToken: login.AccessToken,
+		AvatarUrl:   "",
+		DisplayName: "",
+	}
 
 }
