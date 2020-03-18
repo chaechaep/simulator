@@ -41,9 +41,8 @@ func Register() (ret types.RegisterResp, err error) {
 		if err := json.NewDecoder(resp.Body).Decode(&errorRet); err != nil {
 			return ret, fmt.Errorf("decode failed : %s", err.Error())
 		} else {
-			return ret, fmt.Errorf("register error( status code : %d, error code : %s, error : %s )", resp.StatusCode, errorRet.Errcode, errorRet.Error)
+			return ret, fmt.Errorf("register error( status code : %d, error code : %s, error msg : %s )", resp.StatusCode, errorRet.Errcode, errorRet.Error)
 		}
-		return ret, fmt.Errorf("bad request")
 	}
 	return ret, nil
 }

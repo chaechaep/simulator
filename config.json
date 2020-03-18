@@ -1,4 +1,5 @@
 {
   "base_url" : "http://14.0.81.136:8008/_matrix/client/r0",
-  "access_token_prefix" : "Bearer "
+  "access_token_prefix" : "Bearer ",
+  "default_room_id" : "!WMxrVkaEfBZBGZOviw%3Aplea.im"
 }

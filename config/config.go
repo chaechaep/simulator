@@ -9,6 +9,7 @@ import (
 type Config struct {
 	BaseUrl           string `json:"base_url"`
 	AccessTokenPrefix string `json:"access_token_prefix"`
+	DefaultRoomId     string `json:"default_room_id"`
 }
 
 var Cfg *Config

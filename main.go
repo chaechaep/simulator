@@ -17,45 +17,23 @@ func main() {
 	fmt.Println(config)
 
 	/*
-			values := map[string]string{"msgtype": "m.text", "body": "testtest"}
-			jsonStr, _ := json.Marshal(values)
-			req, err = http.NewRequest("PUT", "http://14.0.81.136:8008/_matrix/client/r0/rooms/!WMxrVkaEfBZBGZOviw%3Aplea.im/send/m.room.message/36", bytes.NewBuffer(jsonStr))
-			if err != nil {
-				panic(err)
-			}
-			req.Header.Add("content-type", "application/json")
-			req.Header.Add("Authorization", "Bearer MDAxNWxvY2F0aW9uIHBsZWEuaW0KMDAxM2lkZW50aWZpZXIga2V5CjAwMTBjaWQgZ2VuID0gMQowMDI2Y2lkIHVzZXJfaWQgPSBAY2hhZXVudGVzdDpwbGVhLmltCjAwMTZjaWQgdHlwZSA9IGFjY2VzcwowMDIxY2lkIG5vbmNlID0gbmRrcWthY21Oa21yLjpGMQowMDJmc2lnbmF0dXJlIGOC3upFWiChXeMaFRkpOgJq1DEkU74KBRB36okpSgtNCg")
-			resp, err = client.Do(req)
-			if err != nil {
-				panic(err)
-			}
-			data, err = ioutil.ReadAll(resp.Body)
-			if err != nil {
-				panic(err)
-			}
-			fmt.Println(string(data))
-		// register 부분
-
-	*/
-
-	// join room
-	// Default Room Id : !WMxrVkaEfBZBGZOviw%3Aplea.im
-	/*
-			req, err = http.NewRequest("POST", "http://14.0.81.136:8008/_matrix/client/r0/rooms/!WMxrVkaEfBZBGZOviw%3Aplea.im/join", nil)
-			if err != nil {
-				panic(err)
-			}
-			req.Header.Add("Authorization", "Bearer "+result.AccessToken)
-			resp, err = client.Do(req)
-			if err != nil {
-				panic(err)
-			}
-			fmt.Println(resp.StatusCode)
-			data, err = ioutil.ReadAll(resp.Body)
-			if err != nil {
-				panic(err)
-			}
-			fmt.Printf("%s\n", string(data))
+		values := map[string]string{"msgtype": "m.text", "body": "testtest"}
+		jsonStr, _ := json.Marshal(values)
+		req, err = http.NewRequest("PUT", "http://14.0.81.136:8008/_matrix/client/r0/rooms/!WMxrVkaEfBZBGZOviw%3Aplea.im/send/m.room.message/36", bytes.NewBuffer(jsonStr))
+		if err != nil {
+			panic(err)
+		}
+		req.Header.Add("content-type", "application/json")
+		req.Header.Add("Authorization", "Bearer MDAxNWxvY2F0aW9uIHBsZWEuaW0KMDAxM2lkZW50aWZpZXIga2V5CjAwMTBjaWQgZ2VuID0gMQowMDI2Y2lkIHVzZXJfaWQgPSBAY2hhZXVudGVzdDpwbGVhLmltCjAwMTZjaWQgdHlwZSA9IGFjY2VzcwowMDIxY2lkIG5vbmNlID0gbmRrcWthY21Oa21yLjpGMQowMDJmc2lnbmF0dXJlIGOC3upFWiChXeMaFRkpOgJq1DEkU74KBRB36okpSgtNCg")
+		resp, err = client.Do(req)
+		if err != nil {
+			panic(err)
+		}
+		data, err = ioutil.ReadAll(resp.Body)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(string(data))
 
 		//	joined rooms
 		req, err = http.NewRequest("GET", config.BaseUrl+"/joined_rooms", nil)
