@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/CHAEUNPARK/simulator/config"
-	"github.com/CHAEUNPARK/simulator/types"
+	"github.com/CHAEUNPARK/simulator/object"
 )
 
 func main() {
@@ -47,7 +47,7 @@ func main() {
 	//	DisplayName: "",
 	//}
 
-	user := types.User{
+	user := object.User{
 		UserId:      "testtest1",
 		AccessToken: "",
 		Password:    "testtest",

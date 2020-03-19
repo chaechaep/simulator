@@ -14,12 +14,13 @@ type LoginReq struct {
 }
 
 type LoginResp struct {
-	UserId      string               `json:"user_id"`
-	AccessToken string               `json:"access_token"`
-	DeviceId    string               `json:"device_id"`
-	WellKnown   DiscoveryInformation `json:"well_known"`
+	UserId      string `json:"user_id"`
+	AccessToken string `json:"access_token"`
+	DeviceId    string `json:"device_id"`
+	//WellKnown   DiscoveryInformation `json:"well_known"`
 }
 
+/*
 type DiscoveryInformation struct {
 	Homeserver     HomeserverInformation     `json:"m.homeserver"`
 	IdentityServer IdentityServerInformation `json:"m.identity_server"`
@@ -32,3 +33,5 @@ type HomeserverInformation struct {
 type IdentityServerInformation struct {
 	BaseUrl string `json:"base_url"`
 }
+
+*/

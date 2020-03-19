@@ -8,12 +8,12 @@ import (
 	"net/http"
 )
 
-func JoinRoom(user types.User) (ret types.JoinRoomResp, err error) {
+func JoinRoom(accessToken string) (ret types.JoinRoomResp, err error) {
 	req, err := http.NewRequest("POST", config.Cfg.BaseUrl+"/rooms/"+config.Cfg.DefaultRoomId+"/join", nil)
 	if err != nil {
 		return ret, fmt.Errorf("request create error : %s", err.Error())
 	}
-	req.Header.Add("Authorizaion", config.Cfg.AccessTokenPrefix+user.AccessToken)
+	req.Header.Add("Authorizaion", config.Cfg.AccessTokenPrefix+accessToken)
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -34,12 +34,12 @@ func JoinRoom(user types.User) (ret types.JoinRoomResp, err error) {
 	return ret, nil
 }
 
-func GetJoinedRooms(user types.User) (ret types.JoinedRoomResp, err error) {
+func GetJoinedRooms(accessToken string) (ret types.JoinedRoomResp, err error) {
 	req, err := http.NewRequest("GET", config.Cfg.BaseUrl+"/joined_rooms", nil)
 	if err != nil {
 		return ret, fmt.Errorf("request create error : %s", err.Error())
 	}
-	req.Header.Add("Authorization", config.Cfg.AccessTokenPrefix+user.AccessToken)
+	req.Header.Add("Authorization", config.Cfg.AccessTokenPrefix+accessToken)
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {

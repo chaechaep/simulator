@@ -13,20 +13,22 @@ import (
 var client = &http.Client{}
 var errorRet = types.Error{}
 
-func Process(user *types.User, method string, url string, reqValue []byte, respValue interface{}, auth bool) (ret interface{}, err error) {
+func Process(method string, url string, reqValue []byte, respValue interface{}, auth string) (ret map[string]interface{}, err error) {
 	var body io.Reader = nil
 	if reqValue != nil {
 		body = bytes.NewBuffer(reqValue)
 	}
+
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return ret, fmt.Errorf("request create error : %s", err.Error())
 	}
+
 	if reqValue != nil {
 		req.Header.Add("Content-Type", "application/json")
 	}
-	if auth {
-		req.Header.Add("Authorization", config.Cfg.AccessTokenPrefix+user.AccessToken)
+	if auth != "" {
+		req.Header.Add("Authorization", config.Cfg.AccessTokenPrefix+auth)
 	}
 
 	resp, err := client.Do(req)
@@ -45,5 +47,7 @@ func Process(user *types.User, method string, url string, reqValue []byte, respV
 			return ret, fmt.Errorf("status code : %d, error code : %s, error msg : %s", resp.StatusCode, errorRet.Errcode, errorRet.Error)
 		}
 	}
+
+	ret = respValue.(map[string]interface{})
 	return ret, nil
 }

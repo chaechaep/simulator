@@ -8,14 +8,15 @@ import (
 	"net/http"
 )
 
-func Login(user *types.User) (ret types.LoginResp, err error) {
+func Login(userId string, password string) (ret types.LoginResp, err error) {
+	auth := ""
 	values := types.LoginReq{
 		Type: "m.login.password",
 		Identifier: types.UserIdentifier{
 			Type: "m.id.user",
-			User: user.UserId,
+			User: userId,
 		},
-		Password:                 user.Password,
+		Password:                 password,
 		DeviceId:                 "testtest",
 		InitialDeviceDisplayName: "",
 	}
@@ -45,21 +46,26 @@ func Login(user *types.User) (ret types.LoginResp, err error) {
 			}
 		}
 	*/
-	result, err := Process(user, "POST", config.Cfg.BaseUrl+"/login", jsonStr, types.LoginResp{}, false)
+
+	result, err := Process("POST", config.Cfg.BaseUrl+"/login", jsonStr, types.LoginResp{}, auth)
 	if err != nil {
 		return ret, err
 	}
-	ret = result.(types.LoginResp)
+
+	ret.UserId = result["user_id"].(string)
+	ret.AccessToken = result["access_token"].(string)
+	ret.DeviceId = result["device_id"].(string)
+
 	return ret, nil
 }
 
-func Logout(user *types.User) error {
+func Logout(accessToken string) error {
 	req, err := http.NewRequest("POST", config.Cfg.BaseUrl+"/logout", nil)
 	if err != nil {
 		return fmt.Errorf("request create error : %s", err.Error())
 	}
 
-	req.Header.Add("Authorization", config.Cfg.AccessTokenPrefix+user.AccessToken)
+	req.Header.Add("Authorization", config.Cfg.AccessTokenPrefix+accessToken)
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
