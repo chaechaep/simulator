@@ -1,7 +1,6 @@
 package event
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/CHAEUNPARK/simulator/config"
@@ -21,29 +20,36 @@ func Login(user *types.User) (ret types.LoginResp, err error) {
 		InitialDeviceDisplayName: "",
 	}
 	jsonStr, _ := json.Marshal(values)
-	req, err := http.NewRequest("POST", config.Cfg.BaseUrl+"/login", bytes.NewBuffer(jsonStr))
+	/*
+		req, err := http.NewRequest("POST", config.Cfg.BaseUrl+"/login", bytes.NewBuffer(jsonStr))
+		if err != nil {
+			return ret, err
+		}
+		req.Header.Add("Content-Type", "application/json")
+		client := &http.Client{}
+
+		resp, err := client.Do(req)
+		if err != nil {
+			return ret, fmt.Errorf("send request error : %s", err.Error())
+		}
+		if resp.StatusCode == http.StatusOK {
+			if err := json.NewDecoder(resp.Body).Decode(&ret); err != nil {
+				return ret, fmt.Errorf("response decode error : %s", err.Error())
+			}
+		} else {
+			errorRet := types.Error{}
+			if err := json.NewDecoder(resp.Body).Decode(&errorRet); err != nil {
+				return ret, fmt.Errorf("response decode error : %s", err.Error())
+			} else {
+				return ret, fmt.Errorf("login failed ( status code : %d, error code : %s, error msg : %s )", resp.StatusCode, errorRet.Errcode, errorRet.Error)
+			}
+		}
+	*/
+	result, err := Process(user, "POST", config.Cfg.BaseUrl+"/login", jsonStr, types.LoginResp{}, false)
 	if err != nil {
 		return ret, err
 	}
-	req.Header.Add("Content-Type", "application/json")
-	client := &http.Client{}
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return ret, fmt.Errorf("send request error : %s", err.Error())
-	}
-	if resp.StatusCode == http.StatusOK {
-		if err := json.NewDecoder(resp.Body).Decode(&ret); err != nil {
-			return ret, fmt.Errorf("response decode error : %s", err.Error())
-		}
-	} else {
-		errorRet := types.Error{}
-		if err := json.NewDecoder(resp.Body).Decode(&errorRet); err != nil {
-			return ret, fmt.Errorf("response decode error : %s", err.Error())
-		} else {
-			return ret, fmt.Errorf("login failed ( status code : %d, error code : %s, error msg : %s )", resp.StatusCode, errorRet.Errcode, errorRet.Error)
-		}
-	}
+	ret = result.(types.LoginResp)
 	return ret, nil
 }
 

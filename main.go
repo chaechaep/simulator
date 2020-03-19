@@ -2,15 +2,14 @@ package main
 
 import (
 	"fmt"
-	config2 "github.com/CHAEUNPARK/simulator/config"
-	"github.com/CHAEUNPARK/simulator/event"
+	"github.com/CHAEUNPARK/simulator/config"
 	"github.com/CHAEUNPARK/simulator/types"
 )
 
 func main() {
 
 	confFile := "C://Users/user/GolandProjects/go/src/github.com/CHAEUNPARK/simulator/config.json"
-	err := config2.Init(confFile)
+	err := config.Init(confFile)
 	if err != nil {
 		fmt.Println("config load failed : ", err)
 		return
@@ -35,17 +34,35 @@ func main() {
 		}
 		fmt.Println(string(data))
 	*/
-	login, err := event.Login()
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(login.UserId)
-	fmt.Println(login.AccessToken)
+	//login, err := event.Login()
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
+	//fmt.Println(login.UserId)
+	//fmt.Println(login.AccessToken)
+	//user := types.User{
+	//	UserId:      login.UserId,
+	//	AccessToken: login.AccessToken,
+	//	AvatarUrl:   "",
+	//	DisplayName: "",
+	//}
+
 	user := types.User{
-		UserId:      login.UserId,
-		AccessToken: login.AccessToken,
-		AvatarUrl:   "",
-		DisplayName: "",
+		UserId:      "testtest1",
+		AccessToken: "",
+		Password:    "testtest",
 	}
+	//values := types.LoginReq{
+	//	Type: "m.login.password",
+	//	Identifier: types.UserIdentifier{
+	//		Type: "m.id.user",
+	//		User: user.UserId,
+	//	},
+	//	Password:                 user.Password,
+	//	DeviceId:                 "testtest",
+	//	InitialDeviceDisplayName: "",
+	//}
+	//jsonStr, _ := json.Marshal(values)
+	user.Login()
 
 }

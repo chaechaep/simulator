@@ -1,6 +1,9 @@
 package types
 
-import "github.com/CHAEUNPARK/simulator/event"
+import (
+	"fmt"
+	"github.com/CHAEUNPARK/simulator/event"
+)
 
 type User struct {
 	UserId      string `json:"user_id"`
@@ -9,8 +12,11 @@ type User struct {
 }
 
 func (user *User) Login() error {
-	event.Login(user)
-
+	result, err := event.Login(user)
+	if err != nil {
+		return err
+	}
+	fmt.Println(result)
 	return nil
 }
 
