@@ -47,7 +47,7 @@ func main() {
 	//	DisplayName: "",
 	//}
 
-	user := object.User{
+	user := &object.User{
 		UserId:      "testtest1",
 		AccessToken: "",
 		Password:    "testtest",
@@ -64,5 +64,7 @@ func main() {
 	//}
 	//jsonStr, _ := json.Marshal(values)
 	user.Login()
+	user.GetJoinedRooms()
+	user.Logout()
 
 }

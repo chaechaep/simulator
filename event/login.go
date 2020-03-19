@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"github.com/CHAEUNPARK/simulator/config"
 	"github.com/CHAEUNPARK/simulator/types"
-	"net/http"
 )
 
-func Login(userId string, password string) (ret types.LoginResp, err error) {
+func Login(userId string, password string) (ret map[string]interface{}, err error) {
 	auth := ""
 	values := types.LoginReq{
 		Type: "m.login.password",
@@ -21,66 +20,22 @@ func Login(userId string, password string) (ret types.LoginResp, err error) {
 		InitialDeviceDisplayName: "",
 	}
 	jsonStr, _ := json.Marshal(values)
-	/*
-		req, err := http.NewRequest("POST", config.Cfg.BaseUrl+"/login", bytes.NewBuffer(jsonStr))
-		if err != nil {
-			return ret, err
-		}
-		req.Header.Add("Content-Type", "application/json")
-		client := &http.Client{}
-
-		resp, err := client.Do(req)
-		if err != nil {
-			return ret, fmt.Errorf("send request error : %s", err.Error())
-		}
-		if resp.StatusCode == http.StatusOK {
-			if err := json.NewDecoder(resp.Body).Decode(&ret); err != nil {
-				return ret, fmt.Errorf("response decode error : %s", err.Error())
-			}
-		} else {
-			errorRet := types.Error{}
-			if err := json.NewDecoder(resp.Body).Decode(&errorRet); err != nil {
-				return ret, fmt.Errorf("response decode error : %s", err.Error())
-			} else {
-				return ret, fmt.Errorf("login failed ( status code : %d, error code : %s, error msg : %s )", resp.StatusCode, errorRet.Errcode, errorRet.Error)
-			}
-		}
-	*/
 
 	result, err := Process("POST", config.Cfg.BaseUrl+"/login", jsonStr, types.LoginResp{}, auth)
 	if err != nil {
-		return ret, err
+		return ret, fmt.Errorf("login failed : %s", err)
 	}
 
-	ret.UserId = result["user_id"].(string)
-	ret.AccessToken = result["access_token"].(string)
-	ret.DeviceId = result["device_id"].(string)
+	ret = result
 
 	return ret, nil
 }
 
 func Logout(accessToken string) error {
-	req, err := http.NewRequest("POST", config.Cfg.BaseUrl+"/logout", nil)
+	result, err := Process("POST", config.Cfg.BaseUrl+"/logout", nil, types.JSONEmpty{}, accessToken)
 	if err != nil {
-		return fmt.Errorf("request create error : %s", err.Error())
+		return fmt.Errorf("logout failed : %s", err)
 	}
-
-	req.Header.Add("Authorization", config.Cfg.AccessTokenPrefix+accessToken)
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return fmt.Errorf("send request error : %s", err.Error())
-	}
-
-	if resp.StatusCode == http.StatusOK {
-		return nil
-	} else {
-		errorRet := types.Error{}
-		if json.NewDecoder(resp.Body).Decode(&errorRet); err != nil {
-			return fmt.Errorf("response decode error : %s", err.Error())
-		} else {
-			return fmt.Errorf("logout falied ( status code : %d, error code : %s, error msg : %s )", resp.StatusCode, errorRet.Errcode, errorRet.Error)
-		}
-	}
+	fmt.Println(result)
 	return nil
 }

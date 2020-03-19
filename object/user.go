@@ -16,11 +16,16 @@ func (user *User) Login() error {
 	if err != nil {
 		return err
 	}
+	user.AccessToken = result["access_token"].(string)
 	fmt.Println(result)
 	return nil
 }
 
 func (user *User) Logout() error {
+	err := event.Logout(user.AccessToken)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -41,5 +46,7 @@ func (user *User) JoinRoom(roomId string) error {
 }
 
 func (user *User) GetJoinedRooms() (ret []string, err error) {
+	result, err := event.GetJoinedRooms(user.AccessToken)
+	fmt.Println(result)
 	return ret, nil
 }
