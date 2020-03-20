@@ -43,11 +43,20 @@ func (user *User) GetDevices() (ret []string, err error) {
 }
 
 func (user *User) JoinRoom(roomId string) error {
+	result, err := event.JoinRoom(user.AccessToken, roomId)
+	if err != nil {
+		return err
+	}
+	fmt.Println(result)
+
 	return nil
 }
 
 func (user *User) GetJoinedRooms() (ret []string, err error) {
 	result, err := event.GetJoinedRooms(user.AccessToken)
+	if err != nil {
+		return ret, err
+	}
 	fmt.Println(result)
 	return ret, nil
 }

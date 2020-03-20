@@ -20,12 +20,9 @@ func Register(userName string, password string, deviceId string) (ret types.Regi
 		InhibitLogin:             false,
 	}
 	jsonStr, _ := json.Marshal(values)
-	resp := types.RegisterResp{}
-	err = Process("POST", config.Cfg.BaseUrl+"/register", jsonStr, &resp, "")
+	err = Process("POST", config.Cfg.BaseUrl+"/register", jsonStr, &ret, "")
 	if err != nil {
 		return ret, fmt.Errorf("regist failed : %s", err)
 	}
-
-	ret = resp
 	return ret, nil
 }

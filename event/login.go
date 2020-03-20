@@ -20,13 +20,10 @@ func Login(userId string, password string, deviceId string) (ret types.LoginResp
 		InitialDeviceDisplayName: "",
 	}
 	jsonStr, _ := json.Marshal(values)
-	resp := types.LoginResp{}
-	err = Process("POST", config.Cfg.BaseUrl+"/login", jsonStr, &resp, auth)
+	err = Process("POST", config.Cfg.BaseUrl+"/login", jsonStr, &ret, auth)
 	if err != nil {
 		return ret, fmt.Errorf("login failed : %s", err)
 	}
-
-	ret = resp
 
 	return ret, nil
 }
