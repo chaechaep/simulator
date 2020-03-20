@@ -16,7 +16,7 @@ func (user *User) Login() error {
 	if err != nil {
 		return err
 	}
-	user.AccessToken = result["access_token"].(string)
+	user.AccessToken = result.AccessToken
 	fmt.Println(result)
 	return nil
 }

@@ -13,7 +13,7 @@ import (
 var client = &http.Client{}
 var errorRet = types.Error{}
 
-func Process(method string, url string, reqValue []byte, respValue interface{}, auth string) (ret map[string]interface{}, err error) {
+func Process(method string, url string, reqValue []byte, respValue interface{}, auth string) error {
 	var body io.Reader = nil
 	if reqValue != nil {
 		body = bytes.NewBuffer(reqValue)
@@ -21,7 +21,7 @@ func Process(method string, url string, reqValue []byte, respValue interface{}, 
 
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
-		return ret, fmt.Errorf("request create error : %s", err.Error())
+		return fmt.Errorf("request create error : %s", err.Error())
 	}
 
 	if reqValue != nil {
@@ -33,21 +33,21 @@ func Process(method string, url string, reqValue []byte, respValue interface{}, 
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return ret, fmt.Errorf("send request error : %s", err.Error())
+		return fmt.Errorf("send request error : %s", err.Error())
 	}
 
 	if resp.StatusCode == http.StatusOK {
-		if err := json.NewDecoder(resp.Body).Decode(&respValue); err != nil {
-			return ret, fmt.Errorf("response decode error : %s", err.Error())
+		if err := json.NewDecoder(resp.Body).Decode(respValue); err != nil {
+			return fmt.Errorf("response decode error : %s", err.Error())
 		}
 	} else {
 		if err := json.NewDecoder(resp.Body).Decode(&errorRet); err != nil {
-			return ret, fmt.Errorf("response decode error : %s", err.Error())
+			return fmt.Errorf("response decode error : %s", err.Error())
 		} else {
-			return ret, fmt.Errorf("status code : %d, error code : %s, error msg : %s", resp.StatusCode, errorRet.Errcode, errorRet.Error)
+			return fmt.Errorf("status code : %d, error code : %s, error msg : %s", resp.StatusCode, errorRet.Errcode, errorRet.Error)
 		}
 	}
+	fmt.Println(respValue)
 
-	ret = respValue.(map[string]interface{})
-	return ret, nil
+	return nil
 }

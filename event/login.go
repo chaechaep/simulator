@@ -7,7 +7,7 @@ import (
 	"github.com/CHAEUNPARK/simulator/types"
 )
 
-func Login(userId string, password string) (ret map[string]interface{}, err error) {
+func Login(userId string, password string) (ret types.LoginResp, err error) {
 	auth := ""
 	values := types.LoginReq{
 		Type: "m.login.password",
@@ -20,22 +20,23 @@ func Login(userId string, password string) (ret map[string]interface{}, err erro
 		InitialDeviceDisplayName: "",
 	}
 	jsonStr, _ := json.Marshal(values)
-
-	result, err := Process("POST", config.Cfg.BaseUrl+"/login", jsonStr, types.LoginResp{}, auth)
+	resp := types.LoginResp{}
+	err = Process("POST", config.Cfg.BaseUrl+"/login", jsonStr, &resp, auth)
 	if err != nil {
 		return ret, fmt.Errorf("login failed : %s", err)
 	}
 
-	ret = result
+	ret = resp
 
 	return ret, nil
 }
 
 func Logout(accessToken string) error {
-	result, err := Process("POST", config.Cfg.BaseUrl+"/logout", nil, types.JSONEmpty{}, accessToken)
+	resp := types.JSONEmpty{}
+	err := Process("POST", config.Cfg.BaseUrl+"/logout", nil, &resp, accessToken)
 	if err != nil {
 		return fmt.Errorf("logout failed : %s", err)
 	}
-	fmt.Println(result)
+	fmt.Println(resp)
 	return nil
 }
