@@ -7,7 +7,7 @@ import (
 	"github.com/CHAEUNPARK/simulator/types"
 )
 
-func Login(userId string, password string) (ret types.LoginResp, err error) {
+func Login(userId string, password string, deviceId string) (ret types.LoginResp, err error) {
 	auth := ""
 	values := types.LoginReq{
 		Type: "m.login.password",
@@ -16,7 +16,7 @@ func Login(userId string, password string) (ret types.LoginResp, err error) {
 			User: userId,
 		},
 		Password:                 password,
-		DeviceId:                 "testtest",
+		DeviceId:                 deviceId,
 		InitialDeviceDisplayName: "",
 	}
 	jsonStr, _ := json.Marshal(values)

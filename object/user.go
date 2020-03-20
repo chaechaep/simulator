@@ -9,10 +9,11 @@ type User struct {
 	UserId      string `json:"user_id"`
 	AccessToken string `json:"access_token"`
 	Password    string `json:"password"`
+	DeviceId    string `json:"device_id"`
 }
 
 func (user *User) Login() error {
-	result, err := event.Login(user.UserId, user.Password)
+	result, err := event.Login(user.UserId, user.Password, user.DeviceId)
 	if err != nil {
 		return err
 	}
@@ -49,4 +50,24 @@ func (user *User) GetJoinedRooms() (ret []string, err error) {
 	result, err := event.GetJoinedRooms(user.AccessToken)
 	fmt.Println(result)
 	return ret, nil
+}
+
+func Register(userId string, password string, deviceId string) (user *User, err error) {
+	result, err := event.Register(userId, password, deviceId)
+	if err != nil {
+		return user, err
+	}
+	fmt.Println(result)
+	user = &User{
+		UserId:      userId,
+		AccessToken: result.AccessToken,
+		Password:    password,
+		DeviceId:    deviceId,
+	}
+	err = user.Login()
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
 }
