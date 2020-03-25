@@ -2,6 +2,7 @@ package object
 
 import (
 	"fmt"
+	"github.com/CHAEUNPARK/simulator/config"
 	"github.com/CHAEUNPARK/simulator/event"
 )
 
@@ -30,7 +31,22 @@ func (user *User) Logout() error {
 	return nil
 }
 
-func (user *User) SendMessage(msg string) error {
+func (user *User) SendMessage(msgType string, msg string) error {
+	joinedRoomList, err := user.GetJoinedRooms()
+	if err != nil {
+		return err
+	}
+	roomId := ""
+	if len(joinedRoomList) == 0 {
+		user.JoinRoom(config.Cfg.DefaultRoomId)
+	} else {
+		roomId = joinedRoomList[0]
+	}
+
+	err = event.SendMessage(user.AccessToken, roomId, msgType, msg)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

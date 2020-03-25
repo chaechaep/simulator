@@ -43,6 +43,7 @@ func main() {
 
 	user.Login()
 	user.GetJoinedRooms()
+	user.SendMessage("m.text", "dlrjqhsofrjek")
 	user.Logout()
 
 }
