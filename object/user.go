@@ -14,12 +14,22 @@ type User struct {
 }
 
 func (user *User) Login() error {
-	result, err := event.Login(user.UserId, user.Password, user.DeviceId)
-	if err != nil {
-		return err
+	regAvailableResp, _ := event.GetRegAvailable(user.UserId)
+
+	if regAvailableResp {
+		err := user.Register()
+		if err != nil {
+			return fmt.Errorf("login failed : %s", err)
+		}
+		return nil
+	} else {
+		result, err := event.Login(user.UserId, user.Password, user.DeviceId)
+		if err != nil {
+			return err
+		}
+		user.AccessToken = result.AccessToken
 	}
-	user.AccessToken = result.AccessToken
-	fmt.Println(result)
+
 	return nil
 }
 
@@ -36,7 +46,7 @@ func (user *User) SendMessage(msgType string, msg string) error {
 	if err != nil {
 		return err
 	}
-	roomId := ""
+	roomId := config.Cfg.DefaultRoomId
 	if len(joinedRoomList) == 0 {
 		user.JoinRoom(config.Cfg.DefaultRoomId)
 	} else {
@@ -78,22 +88,13 @@ func (user *User) GetJoinedRooms() (ret []string, err error) {
 	return ret, nil
 }
 
-func Register(userId string, password string, deviceId string) (user *User, err error) {
-	result, err := event.Register(userId, password, deviceId)
+func (user *User) Register() (err error) {
+	result, err := event.Register(user.UserId, user.Password, user.DeviceId)
 	if err != nil {
-		return user, err
+		return err
 	}
 	fmt.Println(result)
-	user = &User{
-		UserId:      userId,
-		AccessToken: result.AccessToken,
-		Password:    password,
-		DeviceId:    deviceId,
-	}
-	err = user.Login()
-	if err != nil {
-		return user, err
-	}
+	user.AccessToken = result.AccessToken
 
-	return user, nil
+	return nil
 }

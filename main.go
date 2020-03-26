@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/CHAEUNPARK/simulator/config"
-	"github.com/CHAEUNPARK/simulator/object"
+	"github.com/chaechaep/simulator/config"
+	"github.com/chaechaep/simulator/object"
 )
 
 func main() {
@@ -15,32 +15,15 @@ func main() {
 		return
 	}
 
-	/*
-		values := map[string]string{"msgtype": "m.text", "body": "testtest"}
-		jsonStr, _ := json.Marshal(values)
-		req, err = http.NewRequest("PUT", "http://14.0.81.136:8008/_matrix/client/r0/rooms/!WMxrVkaEfBZBGZOviw%3Aplea.im/send/m.room.message/36", bytes.NewBuffer(jsonStr))
-		if err != nil {
-			panic(err)
-		}
-		req.Header.Add("content-type", "application/json")
-		req.Header.Add("Authorization", "Bearer MDAxNWxvY2F0aW9uIHBsZWEuaW0KMDAxM2lkZW50aWZpZXIga2V5CjAwMTBjaWQgZ2VuID0gMQowMDI2Y2lkIHVzZXJfaWQgPSBAY2hhZXVudGVzdDpwbGVhLmltCjAwMTZjaWQgdHlwZSA9IGFjY2VzcwowMDIxY2lkIG5vbmNlID0gbmRrcWthY21Oa21yLjpGMQowMDJmc2lnbmF0dXJlIGOC3upFWiChXeMaFRkpOgJq1DEkU74KBRB36okpSgtNCg")
-		resp, err = client.Do(req)
-		if err != nil {
-			panic(err)
-		}
-		data, err = ioutil.ReadAll(resp.Body)
-		if err != nil {
-			panic(err)
-		}
-		fmt.Println(string(data))
-	*/
-
 	user := &object.User{
-		UserId:      "testtest1",
+		UserId: "testtesttest5",
+		//UserId:		"testtest1",
 		AccessToken: "",
-		Password:    "testtest",
+		//Password:    "testtest",
+		Password: config.Cfg.DefaultPassword,
 	}
-
+	//ret, err := event.GetRegAvailable("testtesttest")
+	//fmt.Println(ret)
 	user.Login()
 	user.GetJoinedRooms()
 	user.SendMessage("m.text", "dlrjqhsofrjek")

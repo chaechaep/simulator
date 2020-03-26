@@ -19,3 +19,7 @@ type RegisterResp struct {
 	AccessToken string `json:"access_token"`
 	DeviceId    string `json:"device_id"`
 }
+
+type RegAvailableResp struct {
+	Available bool `json:"available"`
+}

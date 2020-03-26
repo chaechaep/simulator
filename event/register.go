@@ -26,3 +26,13 @@ func Register(userName string, password string, deviceId string) (ret types.Regi
 	}
 	return ret, nil
 }
+
+func GetRegAvailable(userName string) (bool, error) {
+	respValue := types.RegAvailableResp{}
+	url := config.Cfg.BaseUrl + "/register/available?username=" + userName
+	err := Process("GET", url, nil, &respValue, "")
+	if err != nil {
+		return false, fmt.Errorf("get reg available failed : %s", err)
+	}
+	return true, nil
+}
