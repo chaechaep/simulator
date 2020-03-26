@@ -3,8 +3,8 @@ package event
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/CHAEUNPARK/simulator/config"
-	"github.com/CHAEUNPARK/simulator/types"
+	"github.com/chaechaep/simulator/config"
+	"github.com/chaechaep/simulator/types"
 )
 
 func Register(userName string, password string, deviceId string) (ret types.RegisterResp, err error) {

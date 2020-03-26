@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/CHAEUNPARK/simulator/config"
-	"github.com/CHAEUNPARK/simulator/types"
+	"github.com/chaechaep/simulator/config"
+	"github.com/chaechaep/simulator/types"
 	"io"
 	"net/http"
 )

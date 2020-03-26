@@ -2,7 +2,7 @@ package event
 
 import (
 	"fmt"
-	"github.com/CHAEUNPARK/simulator/types"
+	"github.com/chaechaep/simulator/types"
 )
 
 func SendMessage(accessToken string, roomId string, msgType string, messages ...interface{}) error {

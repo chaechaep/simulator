@@ -1,4 +1,4 @@
-module github.com/CHAEUNPARK/simulator
+module github.com/chaechaep/simulator
 
 go 1.13
 

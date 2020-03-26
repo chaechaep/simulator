@@ -2,8 +2,8 @@ package object
 
 import (
 	"fmt"
-	"github.com/CHAEUNPARK/simulator/config"
-	"github.com/CHAEUNPARK/simulator/event"
+	"github.com/chaechaep/simulator/config"
+	"github.com/chaechaep/simulator/event"
 )
 
 type User struct {
@@ -74,6 +74,7 @@ func (user *User) GetJoinedRooms() (ret []string, err error) {
 		return ret, err
 	}
 	fmt.Println(result)
+	ret = result.JoinedRooms
 	return ret, nil
 }
 

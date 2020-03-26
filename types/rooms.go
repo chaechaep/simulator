@@ -5,5 +5,5 @@ type JoinRoomResp struct {
 }
 
 type JoinedRoomResp struct {
-	JoinedRoom []string `json:"joined_room"`
+	JoinedRooms []string `json:"joined_rooms"`
 }

@@ -3,8 +3,8 @@ package event
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/CHAEUNPARK/simulator/config"
-	"github.com/CHAEUNPARK/simulator/types"
+	"github.com/chaechaep/simulator/config"
+	"github.com/chaechaep/simulator/types"
 )
 
 func SendEvent(accessToken string, roomId string, eventType string, reqValue interface{}) (ret types.SendEventResp, err error) {
@@ -15,7 +15,7 @@ func SendEvent(accessToken string, roomId string, eventType string, reqValue int
 		return ret, fmt.Errorf("eventType is not set")
 	}
 	if eventType == "m.room.message" {
-		url = config.Cfg.BaseUrl + "/rooms/" + roomId + "/send/" + eventType + "12341234"
+		url = config.Cfg.BaseUrl + "/rooms/" + roomId + "/send/" + eventType + "/12341234"
 	} else {
 		//state_key -> room event 참고
 		url = config.Cfg.BaseUrl + "/rooms/" + roomId + "/state/" + eventType + stateKey
