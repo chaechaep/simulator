@@ -15,6 +15,6 @@ func GetSync(accessToken string, since string) (ret types.SyncResp, err error) {
 	if err != nil {
 		return ret, fmt.Errorf("get sync failed : %s", err)
 	}
-	fmt.Println(ret)
+	//spew.Dump(ret)
 	return ret, nil
 }

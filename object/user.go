@@ -104,5 +104,6 @@ func (user *User) Register() (err error) {
 }
 
 func (user *User) ReadMarker() (err error) {
+	//Todo: user.Sync.Room.Join -> key, value check 후 roomId = key, eventId = value.Timeline.Events.EventId
 	return nil
 }
