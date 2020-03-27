@@ -17,17 +17,25 @@ func Start(userId string) {
 	}
 
 	user.Login()
-	for {
-		r := rand.Intn(100)
-		time.Sleep(time.Duration(r) * time.Millisecond)
-		user.SendMessage("m.text", "Msg test")
-	}
+	go func() {
+		for {
+			user.GetSync()
+		}
+	}()
+	go func() {
+		for {
+			rand.Seed(time.Now().UnixNano())
+			r := rand.Intn(100)
+			time.Sleep(time.Duration(r) * time.Second)
+			user.SendMessage("m.text", "Msg test"+string(r))
+		}
+	}()
 
 }
 func main() {
-	//userList := []string {
-	//	"testtest3", "testtest4", "testtest5",
-	//}
+	userList := []string{
+		"testtest3", "testtest4", "testtest5",
+	}
 
 	confFile := "C://Users/user/GolandProjects/go/src/github.com/chaechaep/simulator/config.json"
 	err := config.Init(confFile)
@@ -35,18 +43,10 @@ func main() {
 		fmt.Println("config load failed : ", err)
 		return
 	}
-	//for _, user := range userList{
-	//	go Start(user)
-	//}
-	//
-	//fmt.Scanln()
-
-	user := object.User{
-		UserId:      "testtest1",
-		AccessToken: "",
-		Password:    "testtest",
-		DeviceId:    "",
+	for _, user := range userList {
+		go Start(user)
 	}
-	user.Login()
-	user.GetJoinedRooms()
+
+	fmt.Scanln()
+
 }

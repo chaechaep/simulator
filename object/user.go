@@ -4,13 +4,15 @@ import (
 	"fmt"
 	"github.com/chaechaep/simulator/config"
 	"github.com/chaechaep/simulator/event"
+	"github.com/chaechaep/simulator/types"
 )
 
 type User struct {
-	UserId      string `json:"user_id"`
-	AccessToken string `json:"access_token"`
-	Password    string `json:"password"`
-	DeviceId    string `json:"device_id"`
+	UserId      string
+	AccessToken string
+	Password    string
+	DeviceId    string
+	Sync        types.SyncResp
 }
 
 func (user *User) Login() error {
@@ -29,7 +31,6 @@ func (user *User) Login() error {
 		}
 		user.AccessToken = result.AccessToken
 	}
-
 	return nil
 }
 
@@ -61,6 +62,11 @@ func (user *User) SendMessage(msgType string, msg string) error {
 }
 
 func (user *User) GetSync() error {
+	result, err := event.GetSync(user.AccessToken, user.Sync.NextBatch)
+	if err != nil {
+		return err
+	}
+	user.Sync = result
 	return nil
 }
 
@@ -73,8 +79,9 @@ func (user *User) JoinRoom(roomId string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(result)
-
+	if result.RoomId != "" {
+		fmt.Println("join room success")
+	}
 	return nil
 }
 
@@ -83,7 +90,6 @@ func (user *User) GetJoinedRooms() (ret []string, err error) {
 	if err != nil {
 		return ret, err
 	}
-	fmt.Println(result)
 	ret = result.JoinedRooms
 	return ret, nil
 }
@@ -93,8 +99,6 @@ func (user *User) Register() (err error) {
 	if err != nil {
 		return err
 	}
-	fmt.Println(result)
 	user.AccessToken = result.AccessToken
-
 	return nil
 }
