@@ -1,6 +1,7 @@
 package event
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/chaechaep/simulator/config"
 	"github.com/chaechaep/simulator/types"
@@ -23,4 +24,22 @@ func GetJoinedRooms(accessToken string) (ret types.JoinedRoomResp, err error) {
 		return ret, fmt.Errorf("get joined rooms failed : %s", err)
 	}
 	return ret, nil
+}
+
+func ReadMarker(accessToken string, eventId string, roomId string) error {
+	ret := types.JSONEmpty{}
+	if eventId == "" {
+		return fmt.Errorf("eventId not set")
+	}
+	values := types.ReadMarkerReq{
+		MFullyRead: eventId,
+		MRead:      "",
+	}
+	jsonStr, _ := json.Marshal(values)
+	url := config.Cfg.BaseUrl + "/rooms/" + roomId + "/read_markers"
+	err := Process("POST", url, jsonStr, &ret, accessToken)
+	if err != nil {
+		return fmt.Errorf("read marker failed : %s", err)
+	}
+	return nil
 }

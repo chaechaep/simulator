@@ -102,3 +102,7 @@ func (user *User) Register() (err error) {
 	user.AccessToken = result.AccessToken
 	return nil
 }
+
+func (user *User) ReadMarker() (err error) {
+	return nil
+}

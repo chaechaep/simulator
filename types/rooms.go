@@ -9,9 +9,9 @@ type JoinedRoomResp struct {
 }
 
 type Rooms struct {
-	Join   JoinedRoom `json:"join"`
-	Invite InviteRoom `json:"invite"`
-	Leave  LeftRoom   `json:"leave"`
+	Join   map[string]JoinedRoom `json:"join"`
+	Invite map[string]InviteRoom `json:"invite"`
+	Leave  map[string]LeftRoom   `json:"leave"`
 }
 
 type JoinedRoom struct {
@@ -48,4 +48,9 @@ type Timeline struct {
 type UnreadNotificationCounts struct {
 	HighlightCount    int `json:"highlight_count"`
 	NotificationCount int `json:"notification_count"`
+}
+
+type ReadMarkerReq struct {
+	MFullyRead string `json:"m.fully_read"`
+	MRead      string `json:"m.read"`
 }
