@@ -12,6 +12,7 @@ type User struct {
 	AccessToken string
 	Password    string
 	DeviceId    string
+	RoomId      string
 	Sync        types.SyncResp
 }
 
@@ -31,6 +32,21 @@ func (user *User) Login() error {
 		}
 		user.AccessToken = result.AccessToken
 	}
+
+	joinedRoomList, err := user.GetJoinedRooms()
+	if err != nil {
+		return err
+	}
+
+	if len(joinedRoomList) == 0 {
+		err = user.JoinRoom(config.Cfg.DefaultRoomId)
+		if err != nil {
+			return err
+		}
+		user.RoomId = config.Cfg.DefaultRoomId
+	} else {
+		user.RoomId = joinedRoomList[0]
+	}
 	return nil
 }
 
@@ -43,18 +59,7 @@ func (user *User) Logout() error {
 }
 
 func (user *User) SendMessage(msgType string, msg string) error {
-	joinedRoomList, err := user.GetJoinedRooms()
-	if err != nil {
-		return err
-	}
-	roomId := config.Cfg.DefaultRoomId
-	if len(joinedRoomList) == 0 {
-		user.JoinRoom(config.Cfg.DefaultRoomId)
-	} else {
-		roomId = joinedRoomList[0]
-	}
-
-	err = event.SendMessage(user.AccessToken, roomId, msgType, msg)
+	err := event.SendMessage(user.AccessToken, user.RoomId, msgType, msg)
 	if err != nil {
 		return err
 	}
@@ -104,6 +109,18 @@ func (user *User) Register() (err error) {
 }
 
 func (user *User) ReadMarker() (err error) {
-	//Todo: user.Sync.Room.Join -> key, value check 후 roomId = key, eventId = value.Timeline.Events.EventId
+	if len(user.Sync.Rooms.Join) != 0 {
+		for key, _ := range user.Sync.Rooms.Join {
+			user.RoomId = key
+			break
+		}
+		if len(user.Sync.Rooms.Join[user.RoomId].Timeline.Events) != 0 {
+			eventId := user.Sync.Rooms.Join[user.RoomId].Timeline.Events[0].EventId
+			err = event.ReadMarker(user.AccessToken, eventId, user.RoomId)
+			if err != nil {
+				return err
+			}
+		}
+	}
 	return nil
 }

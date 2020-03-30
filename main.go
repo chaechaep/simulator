@@ -30,6 +30,13 @@ func Start(userId string) {
 			user.SendMessage("m.text", "Msg test"+string(r))
 		}
 	}()
+	go func() {
+		for {
+			r := rand.Intn(200)
+			time.Sleep(time.Duration(r) * time.Second)
+			user.ReadMarker()
+		}
+	}()
 
 }
 func main() {
