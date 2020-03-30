@@ -31,6 +31,8 @@ func (user *User) Login() error {
 			return err
 		}
 		user.AccessToken = result.AccessToken
+		user.UserId = result.UserId
+		user.DeviceId = result.DeviceId
 	}
 
 	joinedRoomList, err := user.GetJoinedRooms()
@@ -59,6 +61,7 @@ func (user *User) Logout() error {
 }
 
 func (user *User) SendMessage(msgType string, msg string) error {
+	user.Typing()
 	err := event.SendMessage(user.AccessToken, user.RoomId, msgType, msg)
 	if err != nil {
 		return err
@@ -121,6 +124,14 @@ func (user *User) ReadMarker() (err error) {
 				return err
 			}
 		}
+	}
+	return nil
+}
+
+func (user *User) Typing() error {
+	err := event.Typing(user.AccessToken, user.RoomId, user.UserId)
+	if err != nil {
+		return err
 	}
 	return nil
 }

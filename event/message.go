@@ -1,7 +1,9 @@
 package event
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/chaechaep/simulator/config"
 	"github.com/chaechaep/simulator/types"
 )
 
@@ -20,5 +22,19 @@ func SendMessage(accessToken string, roomId string, msgType string, messages ...
 	}
 	fmt.Println(result)
 
+	return nil
+}
+
+func Typing(accessToken string, roomId string, userId string) error {
+	values := types.TypingReq{
+		Typing:  true,
+		Timeout: 30000,
+	}
+	jsonStr, _ := json.Marshal(values)
+	url := config.Cfg.BaseUrl + "/rooms/" + roomId + "/typing/" + userId
+	err := Process("PUT", url, jsonStr, &types.JSONEmpty{}, accessToken)
+	if err != nil {
+		return fmt.Errorf("typing failed : %s", err)
+	}
 	return nil
 }

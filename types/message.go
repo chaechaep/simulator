@@ -13,3 +13,8 @@ type MsgText struct {
 //type ImageInfo struct {
 //
 //}
+
+type TypingReq struct {
+	Typing  bool `json:"typing"`
+	Timeout int  `json:"timeout"`
+}
