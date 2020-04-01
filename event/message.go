@@ -7,7 +7,7 @@ import (
 	"github.com/chaechaep/simulator/types"
 )
 
-func SendMessage(accessToken string, roomId string, msgType string, messages ...interface{}) error {
+func SendMessage(accessToken string, roomId string, userId string, msgType string, messages ...interface{}) error {
 	//Todo:msgType == m.image는 일단 나중에 생각
 	var values interface{}
 	fmt.Println(msgType)
@@ -16,7 +16,7 @@ func SendMessage(accessToken string, roomId string, msgType string, messages ...
 		Body:    messages[0].(string),
 	}
 
-	result, err := SendEvent(accessToken, roomId, "m.room.message", values)
+	result, err := SendEvent(accessToken, roomId, "m.room.message", values, userId)
 	if err != nil {
 		return fmt.Errorf("send event failed : %s", err)
 	}
@@ -28,7 +28,7 @@ func SendMessage(accessToken string, roomId string, msgType string, messages ...
 func Typing(accessToken string, roomId string, userId string) error {
 	values := types.TypingReq{
 		Typing:  true,
-		Timeout: 30000,
+		Timeout: 3000,
 	}
 	jsonStr, _ := json.Marshal(values)
 	url := config.Cfg.BaseUrl + "/rooms/" + roomId + "/typing/" + userId

@@ -6,10 +6,30 @@ import (
 	"github.com/chaechaep/simulator/config"
 	"github.com/chaechaep/simulator/types"
 	"math/rand"
+	"strings"
 	"time"
 )
 
 const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+var roomEvent = []string{
+	"m.room.aliases",
+	"m.room.canonical_alias",
+	"m.room.create",
+	"m.room.join_rules",
+	"m.room.member",
+	"m.room.power_levels",
+	"m.room.redaction",
+}
+
+var instantMessagingEvent = []string{
+	"m.room.message",
+	"m.room.message.feedback",
+	"m.room.name",
+	"m.room.topic",
+	"m.room.avatar",
+	"m.room.pinned_events",
+}
 
 func createTxnId() string {
 	rand.Seed(time.Now().UnixNano())
@@ -22,19 +42,35 @@ func createTxnId() string {
 	return string(b)
 }
 
-func SendEvent(accessToken string, roomId string, eventType string, reqValue interface{}) (ret types.SendEventResp, err error) {
+func Contains(slice []string, eventType string) bool {
+	for _, val := range slice {
+		if eventType == val {
+			return true
+		}
+	}
+	return false
+}
+func SendEvent(accessToken string, roomId string, eventType string, reqValue interface{}, userId string) (ret types.SendEventResp, err error) {
 	auth := accessToken
 	stateKey := ""
 	url := ""
+
 	if eventType == "" {
 		return ret, fmt.Errorf("eventType is not set")
 	}
-	if eventType == "m.room.message" {
-
+	if Contains(instantMessagingEvent, eventType) {
 		url = config.Cfg.BaseUrl + "/rooms/" + roomId + "/send/" + eventType + "/" + createTxnId()
-	} else {
+	} else if Contains(roomEvent, eventType) {
+		switch eventType {
+		case "m.room.aliases":
+			stateKey = strings.Split(userId, ":")[1]
+		case "m.room.member":
+			stateKey = userId
+		}
 		//state_key -> room event 참고
-		url = config.Cfg.BaseUrl + "/rooms/" + roomId + "/state/" + eventType + stateKey
+		url = config.Cfg.BaseUrl + "/rooms/" + roomId + "/state/" + eventType + "/" + stateKey
+	} else {
+		return ret, fmt.Errorf("invalid eventType")
 	}
 	jsonStr, _ := json.Marshal(reqValue)
 

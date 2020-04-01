@@ -14,3 +14,7 @@ type StrippedState struct {
 	Type     string       `json:"type"`
 	Sender   string       `json:"sender"`
 }
+
+type JoinRule struct {
+	JoinRule string `json:"join_rule"`
+}

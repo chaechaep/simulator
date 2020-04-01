@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/chaechaep/simulator/config"
 	"github.com/chaechaep/simulator/object"
+	"github.com/chaechaep/simulator/types"
 	"math/rand"
 	"time"
 )
@@ -40,9 +41,9 @@ func Start(userId string) {
 
 }
 func main() {
-	userList := []string{
-		"testtest3", "testtest4", "testtest5",
-	}
+	//userList := []string{
+	//	"testtest3", "testtest4", "testtest5",
+	//}
 
 	confFile := "C://Users/user/GolandProjects/go/src/github.com/chaechaep/simulator/config.json"
 	err := config.Init(confFile)
@@ -50,10 +51,19 @@ func main() {
 		fmt.Println("config load failed : ", err)
 		return
 	}
-	for _, user := range userList {
-		go Start(user)
+	//for _, user := range userList {
+	//	go Start(user)
+	//}
+	//
+	//fmt.Scanln()
+	user := object.User{
+		UserId:      "chaeuntest",
+		AccessToken: "",
+		Password:    "ehlswkd123!",
+		DeviceId:    "",
+		RoomId:      "",
+		Sync:        types.SyncResp{},
 	}
-
-	fmt.Scanln()
-
+	user.Login()
+	user.ChangeJoinRule(config.Cfg.DefaultRoomId, "invite")
 }

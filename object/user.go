@@ -5,6 +5,7 @@ import (
 	"github.com/chaechaep/simulator/config"
 	"github.com/chaechaep/simulator/event"
 	"github.com/chaechaep/simulator/types"
+	"net/url"
 )
 
 type User struct {
@@ -24,7 +25,6 @@ func (user *User) Login() error {
 		if err != nil {
 			return fmt.Errorf("login failed : %s", err)
 		}
-		return nil
 	} else {
 		result, err := event.Login(user.UserId, user.Password, user.DeviceId)
 		if err != nil {
@@ -40,6 +40,15 @@ func (user *User) Login() error {
 		return err
 	}
 
+	if user.RoomId != "" {
+		err = user.JoinRoom(url.QueryEscape(user.RoomId))
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
+		return nil
+	}
+
 	if len(joinedRoomList) == 0 {
 		err = user.JoinRoom(config.Cfg.DefaultRoomId)
 		if err != nil {
@@ -48,6 +57,7 @@ func (user *User) Login() error {
 		user.RoomId = config.Cfg.DefaultRoomId
 	} else {
 		user.RoomId = joinedRoomList[0]
+		fmt.Println(joinedRoomList[0])
 	}
 	return nil
 }
@@ -62,7 +72,7 @@ func (user *User) Logout() error {
 
 func (user *User) SendMessage(msgType string, msg string) error {
 	user.Typing()
-	err := event.SendMessage(user.AccessToken, user.RoomId, msgType, msg)
+	err := event.SendMessage(user.AccessToken, user.RoomId, user.UserId, msgType, msg)
 	if err != nil {
 		return err
 	}
@@ -87,6 +97,7 @@ func (user *User) JoinRoom(roomId string) error {
 	if err != nil {
 		return err
 	}
+	user.RoomId = result.RoomId
 	if result.RoomId != "" {
 		fmt.Println("join room success")
 	}
@@ -108,6 +119,8 @@ func (user *User) Register() (err error) {
 		return err
 	}
 	user.AccessToken = result.AccessToken
+	user.UserId = result.UserId
+	user.DeviceId = result.DeviceId
 	return nil
 }
 
@@ -133,5 +146,27 @@ func (user *User) Typing() error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func (user *User) ChangeJoinRule(roomId string, joinRule string) error {
+	var joinRules = []string{
+		"public",
+		"invite",
+	}
+	if user.UserId != "@chaeuntest:plea.im" {
+		return fmt.Errorf("this user is not room creator")
+	}
+	if roomId == "" {
+		return fmt.Errorf("roomId is not set")
+	}
+	if !event.Contains(joinRules, joinRule) {
+		return fmt.Errorf("invalid join rule")
+	}
+	err := event.ChangeJoinRule(user.AccessToken, roomId, user.UserId, joinRule)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

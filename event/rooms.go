@@ -11,7 +11,7 @@ func JoinRoom(accessToken string, roomId string) (ret types.JoinRoomResp, err er
 	if roomId == "" {
 		roomId = config.Cfg.DefaultRoomId
 	}
-	err = Process("POST", config.Cfg.BaseUrl+"/rooms/"+roomId+"/join", nil, &ret, accessToken)
+	err = Process("POST", config.Cfg.BaseUrl+"/join/"+roomId, nil, &ret, accessToken)
 	if err != nil {
 		return ret, fmt.Errorf("join room failed : %s", err)
 	}
@@ -41,5 +41,17 @@ func ReadMarker(accessToken string, eventId string, roomId string) error {
 	if err != nil {
 		return fmt.Errorf("read marker failed : %s", err)
 	}
+	return nil
+}
+
+func ChangeJoinRule(accessToken string, roomId string, userId string, joinRule string) error {
+	values := types.JoinRule{JoinRule: joinRule}
+
+	result, err := SendEvent(accessToken, roomId, "m.room.join_rules", values, userId)
+	if err != nil {
+		fmt.Errorf("set join rule failed : %s", err)
+	}
+	fmt.Println(result)
+
 	return nil
 }
