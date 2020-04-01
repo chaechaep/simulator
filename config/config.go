@@ -7,10 +7,12 @@ import (
 )
 
 type Config struct {
-	BaseUrl           string `json:"base_url"`
-	AccessTokenPrefix string `json:"access_token_prefix"`
-	DefaultRoomId     string `json:"default_room_id"`
-	DefaultPassword   string `json:"default_password"`
+	BaseUrl           string   `json:"base_url"`
+	AccessTokenPrefix string   `json:"access_token_prefix"`
+	DefaultRoomId     string   `json:"default_room_id"`
+	DefaultPassword   string   `json:"default_password"`
+	RoomList          []string `json:"room_list"`
+	UserList          []string `json:"user_list"`
 }
 
 var Cfg *Config

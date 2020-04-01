@@ -54,3 +54,17 @@ type ReadMarkerReq struct {
 	MFullyRead string `json:"m.fully_read"`
 	MRead      string `json:"m.read"`
 }
+
+type GetRoomIdResp struct {
+	RoomId  string   `json:"room_id"`
+	Servers []string `json:"servers"`
+}
+
+type GetJoinedMembersResp struct {
+	Joined map[string]RoomMember `json:"joined"`
+}
+
+type RoomMember struct {
+	DisplayName string `json:"display_name"`
+	AvatarUrl   string `json:"avatar_url"`
+}

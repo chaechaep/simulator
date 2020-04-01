@@ -5,7 +5,6 @@ import (
 	"github.com/chaechaep/simulator/config"
 	"github.com/chaechaep/simulator/event"
 	"github.com/chaechaep/simulator/types"
-	"net/url"
 )
 
 type User struct {
@@ -40,25 +39,27 @@ func (user *User) Login() error {
 		return err
 	}
 
-	if user.RoomId != "" {
-		err = user.JoinRoom(url.QueryEscape(user.RoomId))
-		if err != nil {
-			fmt.Println(err)
-			return err
-		}
-		return nil
-	}
+	//if user.RoomId != "" {
+	//	err = user.JoinRoom(url.QueryEscape(user.RoomId))
+	//	if err != nil {
+	//		fmt.Println(err)
+	//		return err
+	//	}
+	//	return nil
+	//}
 
 	if len(joinedRoomList) == 0 {
-		err = user.JoinRoom(config.Cfg.DefaultRoomId)
-		if err != nil {
-			return err
+		for _, roomId := range config.Cfg.RoomList {
+			err = user.JoinRoom(roomId)
+			if err == nil {
+				break
+			}
 		}
-		user.RoomId = config.Cfg.DefaultRoomId
 	} else {
 		user.RoomId = joinedRoomList[0]
 		fmt.Println(joinedRoomList[0])
 	}
+	fmt.Println("login success : ", user.UserId)
 	return nil
 }
 
@@ -169,4 +170,12 @@ func (user *User) ChangeJoinRule(roomId string, joinRule string) error {
 	}
 
 	return nil
+}
+
+func (user *User) GetJoinedMembers(roomId string) (ret int, err error) {
+	ret, err = event.GetJoinedMembers(user.AccessToken, roomId)
+	if err != nil {
+		return 0, err
+	}
+	return ret, nil
 }
