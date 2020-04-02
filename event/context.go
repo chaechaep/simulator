@@ -10,10 +10,9 @@ import (
 	"net/http"
 )
 
-var errorRet = types.Error{}
-
 func Process(method string, url string, reqValue []byte, respValue interface{}, auth string) error {
 	client := http.Client{}
+	errorRet := types.Error{}
 	var body io.Reader = nil
 	if reqValue != nil {
 		body = bytes.NewBuffer(reqValue)

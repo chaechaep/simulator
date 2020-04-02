@@ -43,7 +43,10 @@ func Start(userId string) {
 }
 
 func checkMemeberCount(user object.User, roomId string) int {
-	cnt, _ := user.GetJoinedMembers(roomId)
+	cnt, err := user.GetJoinedMembers(roomId)
+	if err != nil {
+		fmt.Println(err)
+	}
 	return cnt
 }
 func AdminStart() {
@@ -57,6 +60,8 @@ func AdminStart() {
 		Sync:        types.SyncResp{},
 	}
 	user.Login()
+	userCnt := 0
+
 	go func() {
 		user.GetSync()
 	}()
@@ -69,12 +74,19 @@ func AdminStart() {
 		}
 		go func() {
 			for {
+				time.Sleep(time.Second)
 				cnt := checkMemeberCount(user, roomId)
+				fmt.Println("userCnt : ", userCnt)
+				fmt.Println("cnt : ", cnt)
 				if cnt > 6 {
+					userCnt += cnt - 1
 					err := user.ChangeJoinRule(roomId, "invite")
 					if err != nil {
 						fmt.Println(err)
 					}
+					break
+				}
+				if userCnt == len(config.Cfg.UserList) {
 					break
 				}
 			}
@@ -92,39 +104,41 @@ func main() {
 		fmt.Println("config load failed : ", err)
 		return
 	}
-	//userList := config.Cfg.UserList
-	//go AdminStart()
+	userList := config.Cfg.UserList
+	go AdminStart()
 	//
-	//for _, user := range userList {
-	//	go Start(user)
-	//}
-	//
-	//fmt.Scanln()
-
-	user := object.User{
-		UserId:      "chaeuntest",
-		AccessToken: "",
-		Password:    "ehlswkd123!",
-		DeviceId:    "",
-		RoomId:      "",
-		Sync:        types.SyncResp{},
+	for _, user := range userList {
+		time.Sleep(8 * time.Second)
+		go Start(user)
 	}
-	user.Login()
-	//user.ChangeJoinRule(config.Cfg.DefaultRoomId, "invite")
-	for _, v := range config.Cfg.RoomList {
-		roomId := v
-		if strings.HasPrefix(v, "#") {
-			roomId, err = event.GetRoomId(v)
+	//
+	fmt.Scanln()
+	/*
+		user := object.User{
+			UserId:      "chaeuntest",
+			AccessToken: "",
+			Password:    "ehlswkd123!",
+			DeviceId:    "",
+			RoomId:      "",
+			Sync:        types.SyncResp{},
+		}
+		user.Login()
+		//user.ChangeJoinRule(config.Cfg.DefaultRoomId, "invite")
+		for _, v := range config.Cfg.RoomList {
+			roomId := v
+			if strings.HasPrefix(v, "#") {
+				roomId, err = event.GetRoomId(v)
+				if err != nil {
+					fmt.Println(err)
+				}
+				fmt.Println(roomId)
+			}
+			cnt, err := user.GetJoinedMembers(roomId)
 			if err != nil {
 				fmt.Println(err)
 			}
-			fmt.Println(roomId)
+			fmt.Println(cnt)
 		}
-		cnt, err := user.GetJoinedMembers(roomId)
-		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Println(cnt)
-	}
+	*/
 
 }

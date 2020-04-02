@@ -5,6 +5,7 @@ import (
 	"github.com/chaechaep/simulator/config"
 	"github.com/chaechaep/simulator/event"
 	"github.com/chaechaep/simulator/types"
+	"net/url"
 )
 
 type User struct {
@@ -50,7 +51,7 @@ func (user *User) Login() error {
 
 	if len(joinedRoomList) == 0 {
 		for _, roomId := range config.Cfg.RoomList {
-			err = user.JoinRoom(roomId)
+			err = user.JoinRoom(url.QueryEscape(roomId))
 			if err == nil {
 				break
 			}
