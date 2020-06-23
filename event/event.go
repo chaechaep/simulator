@@ -59,7 +59,7 @@ func SendEvent(accessToken string, roomId string, eventType string, reqValue int
 		return ret, fmt.Errorf("eventType is not set")
 	}
 	if Contains(instantMessagingEvent, eventType) {
-		url = config.Cfg.BaseUrl + "/rooms/" + roomId + "/send/" + eventType + "/" + createTxnId()
+		url = config.Cfg.Simulator.BaseUrl + "/rooms/" + roomId + "/send/" + eventType + "/" + createTxnId()
 	} else if Contains(roomEvent, eventType) {
 		switch eventType {
 		case "m.room.aliases":
@@ -68,7 +68,7 @@ func SendEvent(accessToken string, roomId string, eventType string, reqValue int
 			stateKey = userId
 		}
 		//state_key -> room event 참고
-		url = config.Cfg.BaseUrl + "/rooms/" + roomId + "/state/" + eventType + "/" + stateKey
+		url = config.Cfg.Simulator.BaseUrl + "/rooms/" + roomId + "/state/" + eventType + "/" + stateKey
 	} else {
 		return ret, fmt.Errorf("invalid eventType")
 	}

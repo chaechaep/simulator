@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"github.com/chaechaep/simulator/config"
 	"github.com/chaechaep/simulator/types"
+	"strconv"
 )
 
-func GetSync(accessToken string, since string) (ret types.SyncResp, err error) {
-	url := config.Cfg.BaseUrl + "/sync?full_state=false&timeout=30000"
+func GetSync(accessToken string, since string, syncDuration int) (ret types.SyncResp, err error) {
+	url := config.Cfg.Simulator.BaseUrl + "/sync?full_state=false&timeout=" + strconv.Itoa(syncDuration*1000)
 	if since != "" {
 		url += "&since=" + since
 	}
@@ -15,6 +16,5 @@ func GetSync(accessToken string, since string) (ret types.SyncResp, err error) {
 	if err != nil {
 		return ret, fmt.Errorf("get sync failed : %s", err)
 	}
-	//spew.Dump(ret)
 	return ret, nil
 }

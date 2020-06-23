@@ -50,7 +50,7 @@ func (user *User) Login() error {
 	//}
 
 	if len(joinedRoomList) == 0 {
-		for _, roomId := range config.Cfg.RoomList {
+		for _, roomId := range config.Cfg.Simulator.RoomList {
 			err = user.JoinRoom(url.QueryEscape(roomId))
 			if err == nil {
 				break
@@ -82,7 +82,7 @@ func (user *User) SendMessage(msgType string, msg string) error {
 }
 
 func (user *User) GetSync() error {
-	result, err := event.GetSync(user.AccessToken, user.Sync.NextBatch)
+	result, err := event.GetSync(user.AccessToken, user.Sync.NextBatch, config.Cfg.Simulator.SyncDuration)
 	if err != nil {
 		return err
 	}

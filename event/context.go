@@ -27,7 +27,7 @@ func Process(method string, url string, reqValue []byte, respValue interface{}, 
 		req.Header.Add("Content-Type", "application/json")
 	}
 	if auth != "" {
-		req.Header.Add("Authorization", config.Cfg.AccessTokenPrefix+auth)
+		req.Header.Add("Authorization", config.Cfg.Simulator.AccessTokenPrefix+auth)
 	}
 
 	resp, err := client.Do(req)

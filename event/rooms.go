@@ -10,9 +10,9 @@ import (
 
 func JoinRoom(accessToken string, roomId string) (ret types.JoinRoomResp, err error) {
 	if roomId == "" {
-		roomId = config.Cfg.DefaultRoomId
+		roomId = config.Cfg.Simulator.DefaultRoomId
 	}
-	err = Process("POST", config.Cfg.BaseUrl+"/join/"+roomId, nil, &ret, accessToken)
+	err = Process("POST", config.Cfg.Simulator.BaseUrl+"/join/"+roomId, nil, &ret, accessToken)
 	if err != nil {
 		return ret, fmt.Errorf("join room failed : %s", err)
 	}
@@ -20,7 +20,7 @@ func JoinRoom(accessToken string, roomId string) (ret types.JoinRoomResp, err er
 }
 
 func GetJoinedRooms(accessToken string) (ret types.JoinedRoomResp, err error) {
-	err = Process("GET", config.Cfg.BaseUrl+"/joined_rooms", nil, &ret, accessToken)
+	err = Process("GET", config.Cfg.Simulator.BaseUrl+"/joined_rooms", nil, &ret, accessToken)
 	if err != nil {
 		return ret, fmt.Errorf("get joined rooms failed : %s", err)
 	}
@@ -37,7 +37,7 @@ func ReadMarker(accessToken string, eventId string, roomId string) error {
 		MRead:      "",
 	}
 	jsonStr, _ := json.Marshal(values)
-	url := config.Cfg.BaseUrl + "/rooms/" + roomId + "/read_markers"
+	url := config.Cfg.Simulator.BaseUrl + "/rooms/" + roomId + "/read_markers"
 	err := Process("POST", url, jsonStr, &ret, accessToken)
 	if err != nil {
 		return fmt.Errorf("read marker failed : %s", err)
@@ -62,7 +62,7 @@ func GetRoomId(roomAlias string) (ret string, err error) {
 		return ret, fmt.Errorf("room alias not set")
 	}
 	respValue := types.GetRoomIdResp{}
-	url := config.Cfg.BaseUrl + "/directory/room/" + url2.QueryEscape(roomAlias)
+	url := config.Cfg.Simulator.BaseUrl + "/directory/room/" + url2.QueryEscape(roomAlias)
 	err = Process("GET", url, nil, &respValue, "")
 	if err != nil {
 		return ret, fmt.Errorf("get room id failed : %s", err)
@@ -73,7 +73,7 @@ func GetRoomId(roomAlias string) (ret string, err error) {
 
 func GetJoinedMembers(accessToken string, roomId string) (ret int, err error) {
 	resp := types.GetJoinedMembersResp{}
-	url := config.Cfg.BaseUrl + "/rooms/" + roomId + "/joined_members"
+	url := config.Cfg.Simulator.BaseUrl + "/rooms/" + roomId + "/joined_members"
 	err = Process("GET", url, nil, &resp, accessToken)
 	if err != nil {
 		return 0, fmt.Errorf("get joined members failed : %s", err)

@@ -1,0 +1,29 @@
+{
+    "simulator": {
+        "base_url" : "http://14.0.81.136:8008/_matrix/client/r0",
+        "access_token_prefix" : "Bearer ",
+        "default_room_id" : "!WMxrVkaEfBZBGZOviw%3Aplea.im",
+        "default_password" : "simulator12!",
+        "room_list" : [
+            "!PmqprcUlbsHLAMARHl:plea.im",
+            "#test2:plea.im",
+            "#test3:plea.im",
+            "#test4:plea.im",
+            "#test5:plea.im"
+        ],
+        "send_message_duration": 3,
+        "login_duration": 10,
+        "sync_duration": 3,
+        "create_user_count": 100,
+        "room_member_count": 10
+    },
+    "log": {
+        "log_file": "C://Users/codjs/GolandProjects/go/src/github.com/chaechaep/simulator/bin/log",
+        "process_name": "simulator-log",
+        "max_size": 100,
+        "max_backup": 10,
+        "max_age": 100,
+        "compress": false,
+        "log_level": "debug"
+    }
+}
