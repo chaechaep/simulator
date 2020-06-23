@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/chaechaep/simulator/config"
 	"github.com/chaechaep/simulator/event"
+	"github.com/chaechaep/simulator/log"
 	"github.com/chaechaep/simulator/types"
 	"net/url"
 )
@@ -18,7 +19,11 @@ type User struct {
 }
 
 func (user *User) Login() error {
-	regAvailableResp, _ := event.GetRegAvailable(user.UserId)
+	regAvailableResp, err := event.GetRegAvailable(user.UserId)
+	if err != nil {
+		log.Log.Errorf("userId(%s) : %s", user.UserId, err)
+	}
+	log.Log.Info(user.UserId, "register available : ", regAvailableResp)
 
 	if regAvailableResp {
 		err := user.Register()
