@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/chaechaep/simulator/config"
+	"github.com/chaechaep/simulator/log"
 	"github.com/chaechaep/simulator/types"
 	"io"
 	"net/http"
@@ -43,10 +44,11 @@ func Process(method string, url string, reqValue []byte, respValue interface{}, 
 		if err := json.NewDecoder(resp.Body).Decode(&errorRet); err != nil {
 			return fmt.Errorf("response decode error : %s", err.Error())
 		} else {
+			log.Log.Info("status code : ", resp.StatusCode, ", response : ", respValue)
 			return fmt.Errorf("status code : %d, error code : %s, error msg : %s", resp.StatusCode, errorRet.Errcode, errorRet.Error)
 		}
 	}
-	fmt.Println(respValue)
+	log.Log.Info("status code : ", resp.StatusCode, ", response : ", respValue)
 
 	return nil
 }

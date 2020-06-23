@@ -7,6 +7,10 @@ import (
 )
 
 type Config struct {
+	Admin struct {
+		AdminId       string `json:"admin_id"`
+		AdminPassword string `json:"admin_password"`
+	} `json:"admin"`
 	Simulator struct {
 		BaseUrl             string   `json:"base_url"`
 		AccessTokenPrefix   string   `json:"access_token_prefix"`

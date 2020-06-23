@@ -68,9 +68,9 @@ func AdminStart() {
 	var err error
 	roomList := config.Cfg.Simulator.RoomList
 	user := object.User{
-		UserId:      "chaeuntest",
+		UserId:      config.Cfg.Admin.AdminId,
 		AccessToken: "",
-		Password:    "ehlswkd123!",
+		Password:    config.Cfg.Admin.AdminPassword,
 		DeviceId:    "",
 		RoomId:      "",
 		Sync:        types.SyncResp{},
