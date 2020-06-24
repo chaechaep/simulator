@@ -68,3 +68,35 @@ type RoomMember struct {
 	DisplayName string `json:"display_name"`
 	AvatarUrl   string `json:"avatar_url"`
 }
+
+type CreateRoomReq struct {
+	Visibility    string `json:"visibility"` //["public", "private"]
+	RoomAliasName string `json:"room_alias_name"`
+	Name          string `json:"name"`
+	Topic         string `json:"topic"`
+	Preset        string `json:"preset"` //["private_chat", "public_chat", "trusted_private_chat"]
+}
+
+type CreateRoomResp struct {
+	RoomId    string `json:"room_id"`
+	RoomAlias string `json:"room_alias"`
+}
+
+type GetPublicRoomsResp struct {
+	Chunk                  []PublicRoomsChunk `json:"chunk"`
+	NextBatch              string             `json:"next_batch"`
+	PrevBatch              string             `json:"prev_batch"`
+	TotalRoomCountEstimate int                `json:"total_room_count_estimate"`
+}
+
+type PublicRoomsChunk struct {
+	Aliases          []string `json:"aliases"`
+	CanonicalAlias   string   `json:"canonical_alias"`
+	Name             string   `json:"name"`
+	NumJoinedMembers int      `json:"num_joined_members"`
+	RoomId           string   `json:"room_id"`
+	Topic            string   `json:"topic"`
+	WorldReadable    bool     `json:"world_readable"`
+	GuestCanJoin     bool     `json:"guest_can_join"`
+	AvatarUrl        string   `json:"avatar_url"`
+}

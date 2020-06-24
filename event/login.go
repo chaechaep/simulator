@@ -34,6 +34,5 @@ func Logout(accessToken string) error {
 	if err != nil {
 		return fmt.Errorf("logout failed : %s", err)
 	}
-	fmt.Println(resp)
 	return nil
 }

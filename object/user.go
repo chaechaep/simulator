@@ -6,7 +6,6 @@ import (
 	"github.com/chaechaep/simulator/event"
 	"github.com/chaechaep/simulator/log"
 	"github.com/chaechaep/simulator/types"
-	"net/url"
 )
 
 type User struct {
@@ -40,31 +39,6 @@ func (user *User) Login() error {
 		user.DeviceId = result.DeviceId
 	}
 
-	joinedRoomList, err := user.GetJoinedRooms()
-	if err != nil {
-		return err
-	}
-
-	//if user.RoomId != "" {
-	//	err = user.JoinRoom(url.QueryEscape(user.RoomId))
-	//	if err != nil {
-	//		fmt.Println(err)
-	//		return err
-	//	}
-	//	return nil
-	//}
-
-	if len(joinedRoomList) == 0 {
-		for _, roomId := range config.Cfg.Simulator.RoomList {
-			err = user.JoinRoom(url.QueryEscape(roomId))
-			if err == nil {
-				break
-			}
-		}
-	} else {
-		user.RoomId = joinedRoomList[0]
-		fmt.Println(joinedRoomList[0])
-	}
 	fmt.Println("login success : ", user.UserId)
 	return nil
 }
@@ -156,21 +130,19 @@ func (user *User) Typing() error {
 	return nil
 }
 
-func (user *User) ChangeJoinRule(roomId string, joinRule string) error {
+func (user *User) ChangeJoinRule(joinRule string) error {
 	var joinRules = []string{
 		"public",
 		"invite",
 	}
-	if user.UserId != "@chaeuntest:plea.im" {
-		return fmt.Errorf("this user is not room creator")
-	}
-	if roomId == "" {
+
+	if user.RoomId == "" {
 		return fmt.Errorf("roomId is not set")
 	}
 	if !event.Contains(joinRules, joinRule) {
 		return fmt.Errorf("invalid join rule")
 	}
-	err := event.ChangeJoinRule(user.AccessToken, roomId, user.UserId, joinRule)
+	err := event.ChangeJoinRule(user.AccessToken, user.RoomId, user.UserId, joinRule)
 	if err != nil {
 		return err
 	}
@@ -182,6 +154,23 @@ func (user *User) GetJoinedMembers(roomId string) (ret int, err error) {
 	ret, err = event.GetJoinedMembers(user.AccessToken, roomId)
 	if err != nil {
 		return 0, err
+	}
+	return ret, nil
+}
+
+func (user *User) CreateRoom() error {
+	ret, err := event.CreateRoom(user.AccessToken)
+	if err != nil {
+		return err
+	}
+	user.RoomId = ret.RoomId
+	return nil
+}
+
+func (user *User) GetPublicRooms(nextBatch string) (ret types.GetPublicRoomsResp, err error) {
+	ret, err = event.GetPublicRooms(user.AccessToken, nextBatch)
+	if err != nil {
+		return types.GetPublicRoomsResp{}, err
 	}
 	return ret, nil
 }
