@@ -10,26 +10,26 @@ import (
 	"time"
 )
 
-func JoinRoom(accessToken string, roomId string) (ret types.JoinRoomResp, err error) {
+func JoinRoom(userId, accessToken, roomId string) (ret types.JoinRoomResp, err error) {
 	if roomId == "" {
 		roomId = config.Cfg.Simulator.DefaultRoomId
 	}
-	err = Process("POST", config.Cfg.Simulator.BaseUrl+"/join/"+roomId, nil, &ret, accessToken)
+	err = Process("POST", config.Cfg.Simulator.BaseUrl+"/join/"+roomId, nil, &ret, accessToken, userId)
 	if err != nil {
 		return ret, fmt.Errorf("join room failed : %s", err)
 	}
 	return ret, nil
 }
 
-func GetJoinedRooms(accessToken string) (ret types.JoinedRoomResp, err error) {
-	err = Process("GET", config.Cfg.Simulator.BaseUrl+"/joined_rooms", nil, &ret, accessToken)
+func GetJoinedRooms(userId, accessToken string) (ret types.JoinedRoomResp, err error) {
+	err = Process("GET", config.Cfg.Simulator.BaseUrl+"/joined_rooms", nil, &ret, accessToken, userId)
 	if err != nil {
 		return ret, fmt.Errorf("get joined rooms failed : %s", err)
 	}
 	return ret, nil
 }
 
-func ReadMarker(accessToken string, eventId string, roomId string) error {
+func ReadMarker(userId, accessToken string, eventId string, roomId string) error {
 	ret := types.JSONEmpty{}
 	if eventId == "" {
 		return fmt.Errorf("eventId not set")
@@ -40,7 +40,7 @@ func ReadMarker(accessToken string, eventId string, roomId string) error {
 	}
 	jsonStr, _ := json.Marshal(values)
 	url := config.Cfg.Simulator.BaseUrl + "/rooms/" + roomId + "/read_markers"
-	err := Process("POST", url, jsonStr, &ret, accessToken)
+	err := Process("POST", url, jsonStr, &ret, accessToken, userId)
 	if err != nil {
 		return fmt.Errorf("read marker failed : %s", err)
 	}
@@ -58,13 +58,13 @@ func ChangeJoinRule(accessToken string, roomId string, userId string, joinRule s
 	return nil
 }
 
-func GetRoomId(roomAlias string) (ret string, err error) {
+func GetRoomId(userId, roomAlias string) (ret string, err error) {
 	if roomAlias == "" {
 		return ret, fmt.Errorf("room alias not set")
 	}
 	respValue := types.GetRoomIdResp{}
 	url := config.Cfg.Simulator.BaseUrl + "/directory/room/" + url2.QueryEscape(roomAlias)
-	err = Process("GET", url, nil, &respValue, "")
+	err = Process("GET", url, nil, &respValue, "", userId)
 	if err != nil {
 		return ret, fmt.Errorf("get room id failed : %s", err)
 	}
@@ -72,10 +72,10 @@ func GetRoomId(roomAlias string) (ret string, err error) {
 	return ret, nil
 }
 
-func GetJoinedMembers(accessToken string, roomId string) (ret int, err error) {
+func GetJoinedMembers(userId, accessToken string, roomId string) (ret int, err error) {
 	resp := types.GetJoinedMembersResp{}
 	url := config.Cfg.Simulator.BaseUrl + "/rooms/" + roomId + "/joined_members"
-	err = Process("GET", url, nil, &resp, accessToken)
+	err = Process("GET", url, nil, &resp, accessToken, userId)
 	if err != nil {
 		return 0, fmt.Errorf("get joined members failed : %s", err)
 	}
@@ -94,7 +94,7 @@ func createRandomString() string {
 	return string(b)
 }
 
-func CreateRoom(accessToken string) (ret types.CreateRoomResp, err error) {
+func CreateRoom(userId, accessToken string) (ret types.CreateRoomResp, err error) {
 	url := config.Cfg.Simulator.BaseUrl + "/createRoom"
 	randomStr := createRandomString()
 	values := types.CreateRoomReq{
@@ -105,19 +105,19 @@ func CreateRoom(accessToken string) (ret types.CreateRoomResp, err error) {
 		Preset:        "public_chat",
 	}
 	jsonStr, _ := json.Marshal(values)
-	if err := Process("POST", url, jsonStr, &ret, accessToken); err != nil {
+	if err := Process("POST", url, jsonStr, &ret, accessToken, userId); err != nil {
 		return ret, fmt.Errorf("create room failed : %s", err)
 	}
 
 	return ret, nil
 }
 
-func GetPublicRooms(accessToken, nextBatch string) (ret types.GetPublicRoomsResp, err error) {
+func GetPublicRooms(userId, accessToken, nextBatch string) (ret types.GetPublicRoomsResp, err error) {
 	url := config.Cfg.Simulator.BaseUrl + "/publicRooms?limit=100"
 	if nextBatch != "" {
 		url += "&since=" + nextBatch
 	}
-	if err := Process("GET", url, nil, &ret, accessToken); err != nil {
+	if err := Process("GET", url, nil, &ret, accessToken, userId); err != nil {
 		return ret, fmt.Errorf("get public rooms failed : %s", err)
 	}
 	return ret, nil

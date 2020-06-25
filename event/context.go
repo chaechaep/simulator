@@ -11,7 +11,7 @@ import (
 	"net/http"
 )
 
-func Process(method string, url string, reqValue []byte, respValue interface{}, auth string) error {
+func Process(method string, url string, reqValue []byte, respValue interface{}, auth string, userId string) error {
 	client := http.Client{}
 	errorRet := types.Error{}
 	var body io.Reader = nil
@@ -47,7 +47,7 @@ func Process(method string, url string, reqValue []byte, respValue interface{}, 
 			return fmt.Errorf("status code : %d, error code : %s, error msg : %s", resp.StatusCode, errorRet.Errcode, errorRet.Error)
 		}
 	}
-	log.Log.Info("status code : ", resp.StatusCode, ", response : ", respValue)
+	log.Log.Info("user id : ", userId, ", url : ", url, ", status code : ", resp.StatusCode, ", response : ", respValue)
 
 	return nil
 }

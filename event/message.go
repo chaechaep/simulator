@@ -30,7 +30,7 @@ func Typing(accessToken string, roomId string, userId string) error {
 	}
 	jsonStr, _ := json.Marshal(values)
 	url := config.Cfg.Simulator.BaseUrl + "/rooms/" + roomId + "/typing/" + userId
-	err := Process("PUT", url, jsonStr, &types.JSONEmpty{}, accessToken)
+	err := Process("PUT", url, jsonStr, &types.JSONEmpty{}, accessToken, userId)
 	if err != nil {
 		return fmt.Errorf("typing failed : %s", err)
 	}

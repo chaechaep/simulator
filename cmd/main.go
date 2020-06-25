@@ -50,27 +50,13 @@ func Start(userId string) {
 					if user.RoomId == "" {
 						if rooms.NextBatch == "" {
 							if rooms.TotalRoomCountEstimate < config.Cfg.Simulator.CreateUserCount/2 {
-								if err := user.CreateRoom(); err != nil {
+								for {
 									time.Sleep(5 * time.Second)
-									errorLog(user, err)
-								} else {
-									go func() {
-										for {
-											time.Sleep(time.Duration(config.Cfg.Simulator.LoginDuration) * time.Second)
-											cnt, err := checkMemberCount(user)
-											if err != nil {
-												errorLog(user, err)
-											}
-											if cnt >= 2 {
-												err := user.ChangeJoinRule("invite")
-												if err != nil {
-													errorLog(user, err)
-												} else {
-													break
-												}
-											}
-										}
-									}()
+									if err := user.CreateRoom(); err != nil {
+										errorLog(user, err)
+									} else {
+										break
+									}
 								}
 							} else {
 								break
@@ -83,6 +69,8 @@ func Start(userId string) {
 					}
 				}
 			}
+		} else {
+			user.RoomId = joinedRoomList[0]
 		}
 		if user.RoomId != "" {
 			go func() {
@@ -113,70 +101,6 @@ func Start(userId string) {
 		}
 	}
 }
-
-func checkMemberCount(user object.User) (int, error) {
-	cnt, err := user.GetJoinedMembers(user.RoomId)
-	if err != nil {
-		return 0, err
-	}
-	return cnt, nil
-}
-
-/*
-func AdminStart() {
-	var err error
-	roomList := config.Cfg.Simulator.RoomList
-	user := object.User{
-		UserId:      config.Cfg.Admin.AdminId,
-		AccessToken: "",
-		Password:    config.Cfg.Admin.AdminPassword,
-		DeviceId:    "",
-		RoomId:      "",
-		Sync:        types.SyncResp{},
-	}
-	if err = user.Login(); err != nil {
-		log.Log.Errorf("userId(%s) : %s", user.UserId, err)
-	} else {
-		userCnt := 0
-		go func() {
-			if err = user.GetSync(); err != nil {
-				log.Log.Errorf("userId(%s) : %s", user.UserId, err)
-			}
-		}()
-		for _, v := range roomList {
-			roomId := ""
-			if strings.HasPrefix(v, "#") {
-				roomId, _ = event.GetRoomId(v)
-			} else {
-				roomId = v
-			}
-			go func() {
-				for {
-					time.Sleep(time.Second)
-					cnt, err := checkMemberCount(user, roomId)
-					if err != nil {
-						log.Log.Errorf("userId(%s) : %s", user.UserId, err)
-						break
-					}
-					if cnt > config.Cfg.Simulator.RoomMemberCount {
-						userCnt += cnt - 1
-						err := user.ChangeJoinRule(roomId, "invite")
-						if err != nil {
-							log.Log.Errorf("userId(%s) : %s", user.UserId, err)
-							break
-						}
-						break
-					}
-					if userCnt >= config.Cfg.Simulator.CreateUserCount {
-						break
-					}
-				}
-			}()
-		}
-	}
-}
-
-*/
 
 var (
 	configFile = flag.String("c", "config.json", "The path to the config file.")

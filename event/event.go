@@ -74,7 +74,7 @@ func SendEvent(accessToken string, roomId string, eventType string, reqValue int
 	}
 	jsonStr, _ := json.Marshal(reqValue)
 
-	err = Process("PUT", url, jsonStr, &ret, auth)
+	err = Process("PUT", url, jsonStr, &ret, auth, userId)
 	if err != nil {
 		return ret, fmt.Errorf("send event failed : %s", err)
 	}

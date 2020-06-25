@@ -44,7 +44,7 @@ func (user *User) Login() error {
 }
 
 func (user *User) Logout() error {
-	err := event.Logout(user.AccessToken)
+	err := event.Logout(user.UserId, user.AccessToken)
 	if err != nil {
 		return err
 	}
@@ -52,7 +52,7 @@ func (user *User) Logout() error {
 }
 
 func (user *User) SendMessage(msgType string, msg string) error {
-	user.Typing()
+	//user.Typing()
 	err := event.SendMessage(user.AccessToken, user.RoomId, user.UserId, msgType, msg)
 	if err != nil {
 		return err
@@ -61,7 +61,7 @@ func (user *User) SendMessage(msgType string, msg string) error {
 }
 
 func (user *User) GetSync() error {
-	result, err := event.GetSync(user.AccessToken, user.Sync.NextBatch, config.Cfg.Simulator.SyncDuration)
+	result, err := event.GetSync(user.UserId, user.AccessToken, user.Sync.NextBatch, config.Cfg.Simulator.SyncDuration)
 	if err != nil {
 		return err
 	}
@@ -74,7 +74,7 @@ func (user *User) GetDevices() (ret []string, err error) {
 }
 
 func (user *User) JoinRoom(roomId string) error {
-	result, err := event.JoinRoom(user.AccessToken, roomId)
+	result, err := event.JoinRoom(user.UserId, user.AccessToken, roomId)
 	if err != nil {
 		return err
 	}
@@ -86,7 +86,7 @@ func (user *User) JoinRoom(roomId string) error {
 }
 
 func (user *User) GetJoinedRooms() (ret []string, err error) {
-	result, err := event.GetJoinedRooms(user.AccessToken)
+	result, err := event.GetJoinedRooms(user.UserId, user.AccessToken)
 	if err != nil {
 		return ret, err
 	}
@@ -113,7 +113,7 @@ func (user *User) ReadMarker() (err error) {
 		}
 		if len(user.Sync.Rooms.Join[user.RoomId].Timeline.Events) != 0 {
 			eventId := user.Sync.Rooms.Join[user.RoomId].Timeline.Events[0].EventId
-			err = event.ReadMarker(user.AccessToken, eventId, user.RoomId)
+			err = event.ReadMarker(user.UserId, user.AccessToken, eventId, user.RoomId)
 			if err != nil {
 				return err
 			}
@@ -151,7 +151,7 @@ func (user *User) ChangeJoinRule(joinRule string) error {
 }
 
 func (user *User) GetJoinedMembers(roomId string) (ret int, err error) {
-	ret, err = event.GetJoinedMembers(user.AccessToken, roomId)
+	ret, err = event.GetJoinedMembers(user.UserId, user.AccessToken, roomId)
 	if err != nil {
 		return 0, err
 	}
@@ -159,7 +159,7 @@ func (user *User) GetJoinedMembers(roomId string) (ret int, err error) {
 }
 
 func (user *User) CreateRoom() error {
-	ret, err := event.CreateRoom(user.AccessToken)
+	ret, err := event.CreateRoom(user.UserId, user.AccessToken)
 	if err != nil {
 		return err
 	}
@@ -168,7 +168,7 @@ func (user *User) CreateRoom() error {
 }
 
 func (user *User) GetPublicRooms(nextBatch string) (ret types.GetPublicRoomsResp, err error) {
-	ret, err = event.GetPublicRooms(user.AccessToken, nextBatch)
+	ret, err = event.GetPublicRooms(user.UserId, user.AccessToken, nextBatch)
 	if err != nil {
 		return types.GetPublicRoomsResp{}, err
 	}

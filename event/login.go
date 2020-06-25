@@ -20,7 +20,7 @@ func Login(userId string, password string, deviceId string) (ret types.LoginResp
 		InitialDeviceDisplayName: "",
 	}
 	jsonStr, _ := json.Marshal(values)
-	err = Process("POST", config.Cfg.Simulator.BaseUrl+"/login", jsonStr, &ret, auth)
+	err = Process("POST", config.Cfg.Simulator.BaseUrl+"/login", jsonStr, &ret, auth, userId)
 	if err != nil {
 		return ret, fmt.Errorf("login failed : %s", err)
 	}
@@ -28,9 +28,9 @@ func Login(userId string, password string, deviceId string) (ret types.LoginResp
 	return ret, nil
 }
 
-func Logout(accessToken string) error {
+func Logout(userId, accessToken string) error {
 	resp := types.JSONEmpty{}
-	err := Process("POST", config.Cfg.Simulator.BaseUrl+"/logout", nil, &resp, accessToken)
+	err := Process("POST", config.Cfg.Simulator.BaseUrl+"/logout", nil, &resp, accessToken, userId)
 	if err != nil {
 		return fmt.Errorf("logout failed : %s", err)
 	}

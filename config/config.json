@@ -15,13 +15,13 @@
             "#test4:plea.im",
             "#test5:plea.im"
         ],
-        "send_message_duration": 3,
+        "send_message_duration": 10,
         "login_duration": 10,
         "sync_duration": 30,
         "create_user_count": 100,
         "room_member_count": 10,
-        "room_name_prefix": "matrix-room-test",
-        "user_name_prefix": "user-name-test"
+        "room_name_prefix": "matrix-room-test-1",
+        "user_name_prefix": "user-name-test-1"
     },
     "log": {
         "log_file": "C://Users/codjs/GolandProjects/go/src/github.com/chaechaep/simulator/bin/log",

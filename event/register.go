@@ -20,7 +20,7 @@ func Register(userName string, password string, deviceId string) (ret types.Regi
 		InhibitLogin:             false,
 	}
 	jsonStr, _ := json.Marshal(values)
-	err = Process("POST", config.Cfg.Simulator.BaseUrl+"/register", jsonStr, &ret, "")
+	err = Process("POST", config.Cfg.Simulator.BaseUrl+"/register", jsonStr, &ret, "", userName)
 	if err != nil {
 		return ret, fmt.Errorf("regist failed : %s", err)
 	}
@@ -30,7 +30,7 @@ func Register(userName string, password string, deviceId string) (ret types.Regi
 func GetRegAvailable(userName string) (bool, error) {
 	respValue := types.RegAvailableResp{}
 	url := config.Cfg.Simulator.BaseUrl + "/register/available?username=" + userName
-	err := Process("GET", url, nil, &respValue, "")
+	err := Process("GET", url, nil, &respValue, "", userName)
 	if err != nil {
 		return false, fmt.Errorf("get reg available failed : %s", err)
 	}
