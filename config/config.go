@@ -7,23 +7,17 @@ import (
 )
 
 type Config struct {
-	Admin struct {
-		AdminId       string `json:"admin_id"`
-		AdminPassword string `json:"admin_password"`
-	} `json:"admin"`
 	Simulator struct {
-		BaseUrl             string   `json:"base_url"`
-		AccessTokenPrefix   string   `json:"access_token_prefix"`
-		DefaultRoomId       string   `json:"default_room_id"`
-		DefaultPassword     string   `json:"default_password"`
-		RoomList            []string `json:"room_list"`
-		SendMessageDuration int      `json:"send_message_duration"`
-		LoginDuration       int      `json:"login_duration"`
-		SyncDuration        int      `json:"sync_duration"`
-		RoomMemberCount     int      `json:"room_member_count"`
-		CreateUserCount     int      `json:"create_user_count"`
-		RoomNamePrefix      string   `json:"room_name_prefix"`
-		UserNamePrefix      string   `json:"user_name_prefix"`
+		BaseUrl             string `json:"base_url"`
+		AccessTokenPrefix   string `json:"access_token_prefix"`
+		DefaultRoomId       string `json:"default_room_id"`
+		DefaultPassword     string `json:"default_password"`
+		SendMessageDuration int    `json:"send_message_duration"`
+		LoginDuration       int    `json:"login_duration"`
+		SyncDuration        int    `json:"sync_duration"`
+		CreateUserCount     int    `json:"create_user_count"`
+		RoomNamePrefix      string `json:"room_name_prefix"`
+		UserNamePrefix      string `json:"user_name_prefix"`
 	} `json:"simulator"`
 	Log struct {
 		LogFile     string `json:"log_file"`
