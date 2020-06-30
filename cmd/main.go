@@ -4,11 +4,11 @@ import (
 	"flag"
 	"fmt"
 	"github.com/chaechaep/simulator/config"
+	"github.com/chaechaep/simulator/event"
 	"github.com/chaechaep/simulator/log"
 	"github.com/chaechaep/simulator/object"
 	"math/rand"
 	"os"
-	"strconv"
 	"time"
 )
 
@@ -50,14 +50,17 @@ func Start(userId string) {
 					if user.RoomId == "" {
 						if rooms.NextBatch == "" {
 							if rooms.TotalRoomCountEstimate < config.Cfg.Simulator.CreateUserCount/2 {
-								for {
-									time.Sleep(5 * time.Second)
-									if err := user.CreateRoom(); err != nil {
-										errorLog(user, err)
-									} else {
-										break
+								/*
+									for {
+										time.Sleep(5 * time.Second)
+										if err := user.CreateRoom("fdfd"); err != nil {
+											errorLog(user, err)
+										} else {
+											break
+										}
 									}
-								}
+
+								*/
 							} else {
 								break
 							}
@@ -102,6 +105,43 @@ func Start(userId string) {
 	}
 }
 
+func createRoom(userId, roomName string) {
+	var err error
+	user := object.User{
+		UserId:   userId,
+		Password: config.Cfg.Simulator.DefaultPassword,
+	}
+	if err = user.Login(); err != nil {
+		errorLog(user, err)
+	} else {
+		if err = user.CreateRoom(roomName); err != nil {
+			errorLog(user, err)
+		} else {
+			fmt.Println("create room success : ", userId, " / ", roomName)
+		}
+	}
+}
+
+func joinRoom(userId, roomName string) {
+	var err error
+	var roomId string
+	user := object.User{
+		UserId:   userId,
+		Password: config.Cfg.Simulator.DefaultPassword,
+	}
+	if err = user.Login(); err != nil {
+		errorLog(user, err)
+	} else {
+		if roomId, err = event.GetRoomId(user.UserId, "#"+config.Cfg.Simulator.RoomNamePrefix+roomName+":plea.im"); err != nil {
+			errorLog(user, err)
+		} else {
+			if err = user.JoinRoom(roomId); err != nil {
+				errorLog(user, err)
+			}
+		}
+	}
+}
+
 var (
 	configFile = flag.String("c", "config.json", "The path to the config file.")
 )
@@ -125,9 +165,18 @@ func main() {
 	log.Init(config.Cfg.Log.LogFile, config.Cfg.Log.LogLevel, ProcessName)
 
 	//go AdminStart()
-	for i := 0; i < config.Cfg.Simulator.CreateUserCount; i++ {
+	/*
+		for i := 0; i < config.Cfg.Simulator.CreateUserCount; i++ {
+			time.Sleep(time.Duration(config.Cfg.Simulator.LoginDuration) * time.Second)
+			go Start(config.Cfg.Simulator.UserNamePrefix + strconv.Itoa(i))
+		}
+
+	*/
+
+	for i := 0; i < 10000; i++ {
 		time.Sleep(time.Duration(config.Cfg.Simulator.LoginDuration) * time.Second)
-		go Start(config.Cfg.Simulator.UserNamePrefix + strconv.Itoa(i))
+		createRoom(config.Cfg.Simulator.CreateUserName+fmt.Sprintf("%04d", i), config.Cfg.Simulator.RoomNamePrefix+fmt.Sprintf("%04d", i))
 	}
+
 	fmt.Scanln()
 }

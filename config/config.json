@@ -5,11 +5,13 @@
         "default_room_id" : "!WMxrVkaEfBZBGZOviw%3Aplea.im",
         "default_password" : "simulator12!",
         "send_message_duration": 10,
-        "login_duration": 10,
+        "login_duration": 5,
         "sync_duration": 30,
-        "create_user_count": 100,
-        "room_name_prefix": "matrix-room-test-1",
-        "user_name_prefix": "user-name-test-1"
+        "create_user_count": 10000,
+        "room_name_prefix": "plea-room-test-",
+        "user_name_prefix": "user-name-test-1",
+        "create_user_name": "plea-user-create-",
+        "join_user_name": "plea-user-join-"
     },
     "log": {
         "log_file": "C://Users/codjs/GolandProjects/go/src/github.com/chaechaep/simulator/bin/log",

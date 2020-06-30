@@ -18,6 +18,8 @@ type Config struct {
 		CreateUserCount     int    `json:"create_user_count"`
 		RoomNamePrefix      string `json:"room_name_prefix"`
 		UserNamePrefix      string `json:"user_name_prefix"`
+		CreateUserName      string `json:"create_user_name"`
+		JoinUserName        string `json:"join_user_name"`
 	} `json:"simulator"`
 	Log struct {
 		LogFile     string `json:"log_file"`

@@ -158,8 +158,8 @@ func (user *User) GetJoinedMembers(roomId string) (ret int, err error) {
 	return ret, nil
 }
 
-func (user *User) CreateRoom() error {
-	ret, err := event.CreateRoom(user.UserId, user.AccessToken)
+func (user *User) CreateRoom(roomName string) error {
+	ret, err := event.CreateRoom(user.UserId, roomName, user.AccessToken)
 	if err != nil {
 		return err
 	}

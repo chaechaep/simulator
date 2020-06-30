@@ -94,13 +94,12 @@ func createRandomString() string {
 	return string(b)
 }
 
-func CreateRoom(userId, accessToken string) (ret types.CreateRoomResp, err error) {
+func CreateRoom(userId, roomName, accessToken string) (ret types.CreateRoomResp, err error) {
 	url := config.Cfg.Simulator.BaseUrl + "/createRoom"
-	randomStr := createRandomString()
 	values := types.CreateRoomReq{
 		Visibility:    "public",
-		RoomAliasName: config.Cfg.Simulator.RoomNamePrefix + "-" + randomStr,
-		Name:          config.Cfg.Simulator.RoomNamePrefix + "-" + randomStr,
+		RoomAliasName: config.Cfg.Simulator.RoomNamePrefix + roomName,
+		Name:          config.Cfg.Simulator.RoomNamePrefix + roomName,
 		Topic:         "Matrix Test",
 		Preset:        "public_chat",
 	}
