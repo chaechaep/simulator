@@ -98,8 +98,8 @@ func CreateRoom(userId, roomName, accessToken string) (ret types.CreateRoomResp,
 	url := config.Cfg.Simulator.BaseUrl + "/createRoom"
 	values := types.CreateRoomReq{
 		Visibility:    "public",
-		RoomAliasName: config.Cfg.Simulator.RoomNamePrefix + roomName,
-		Name:          config.Cfg.Simulator.RoomNamePrefix + roomName,
+		RoomAliasName: roomName,
+		Name:          roomName,
 		Topic:         "Matrix Test",
 		Preset:        "public_chat",
 	}

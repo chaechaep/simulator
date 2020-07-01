@@ -79,9 +79,7 @@ func (user *User) JoinRoom(roomId string) error {
 		return err
 	}
 	user.RoomId = result.RoomId
-	if result.RoomId != "" {
-		fmt.Println("join room success")
-	}
+
 	return nil
 }
 
