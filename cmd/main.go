@@ -16,7 +16,8 @@ func errorLog(user object.User, err error) {
 	log.Log.Errorf("userId(%s) : %s", user.UserId, err)
 }
 
-func Start(userId string) {
+func Start(userId, roomName string) {
+	var roomId string
 	var err error
 	user := object.User{
 		UserId:      userId,
@@ -29,51 +30,10 @@ func Start(userId string) {
 		errorLog(user, err)
 	} else {
 		log.Log.Info(userId, " : login success")
-		joinedRoomList, err := user.GetJoinedRooms()
-		if err != nil {
+		if roomId, err = event.GetRoomId(user.UserId, "#"+roomName+":plea.im"); err != nil {
 			errorLog(user, err)
-		}
-		if len(joinedRoomList) == 0 {
-			nextBatch := ""
-			for user.RoomId == "" {
-				if rooms, err := user.GetPublicRooms(nextBatch); err != nil {
-					errorLog(user, err)
-				} else {
-					for _, room := range rooms.Chunk {
-						if room.NumJoinedMembers < 2 {
-							if err := user.JoinRoom(room.RoomId); err != nil {
-								errorLog(user, err)
-							}
-							break
-						}
-					}
-					if user.RoomId == "" {
-						if rooms.NextBatch == "" {
-							if rooms.TotalRoomCountEstimate < config.Cfg.Simulator.CreateUserCount/2 {
-								/*
-									for {
-										time.Sleep(5 * time.Second)
-										if err := user.CreateRoom("fdfd"); err != nil {
-											errorLog(user, err)
-										} else {
-											break
-										}
-									}
-
-								*/
-							} else {
-								break
-							}
-						} else {
-							nextBatch = rooms.NextBatch
-						}
-					} else {
-						break
-					}
-				}
-			}
 		} else {
-			user.RoomId = joinedRoomList[0]
+			user.RoomId = roomId
 		}
 		if user.RoomId != "" {
 			go func() {
@@ -86,13 +46,13 @@ func Start(userId string) {
 			go func() {
 				for {
 					r := rand.Intn(200)
-					time.Sleep(time.Duration(config.Cfg.Simulator.SendMessageDuration) * time.Second)
+					time.Sleep(time.Duration(1/config.Cfg.Simulator.TPS) * time.Second)
 					if err = user.SendMessage("m.text", "Msg test"+string(r)); err != nil {
 						errorLog(user, err)
 					}
 				}
 			}()
-			go func() {
+			/*go func() {
 				for {
 					r := rand.Intn(100)
 					time.Sleep(time.Duration(r) * time.Second)
@@ -100,7 +60,7 @@ func Start(userId string) {
 						errorLog(user, err)
 					}
 				}
-			}()
+			}()*/
 		}
 	}
 }
@@ -166,31 +126,14 @@ func main() {
 
 	log.Init(config.Cfg.Log.LogFile, config.Cfg.Log.LogLevel, ProcessName)
 
-	//go AdminStart()
-	/*
-		for i := 0; i < config.Cfg.Simulator.CreateUserCount; i++ {
-			time.Sleep(time.Duration(config.Cfg.Simulator.LoginDuration) * time.Second)
-			go Start(config.Cfg.Simulator.UserNamePrefix + strconv.Itoa(i))
-		}
-
-	*/
-	/*
-		for i := 0; i < 10000; i++ {
-			time.Sleep(time.Duration(config.Cfg.Simulator.LoginDuration) * time.Second)
-			createRoom(config.Cfg.Simulator.CreateUserName+fmt.Sprintf("%04d", i), config.Cfg.Simulator.RoomNamePrefix+fmt.Sprintf("%04d", i))
-		}
-
-
-		for _, v := range types.CreateUserList {
-			time.Sleep(time.Duration(config.Cfg.Simulator.LoginDuration) * time.Second)
-			createRoom(config.Cfg.Simulator.CreateUserName+fmt.Sprintf("%04d", v), config.Cfg.Simulator.RoomNamePrefix+fmt.Sprintf("%04d", v))
-		}
-	*/
-
-	//joinRooms
-	for i := 0; i < 10000; i++ {
+	for i := 0; i < config.Cfg.Simulator.SessionCount/2; i++ {
 		time.Sleep(time.Duration(config.Cfg.Simulator.LoginDuration) * time.Second)
-		joinRoom(config.Cfg.Simulator.JoinUserName+fmt.Sprintf("%04d", i), config.Cfg.Simulator.RoomNamePrefix+fmt.Sprintf("%04d", i))
+		go Start(config.Cfg.Simulator.CreateUserName+fmt.Sprintf("%04d", i), config.Cfg.Simulator.RoomNamePrefix+fmt.Sprintf("%04d", i))
+	}
+
+	for i := 0; i < config.Cfg.Simulator.SessionCount/2; i++ {
+		time.Sleep(time.Duration(config.Cfg.Simulator.LoginDuration) * time.Second)
+		go Start(config.Cfg.Simulator.JoinUserName+fmt.Sprintf("%04d", i), config.Cfg.Simulator.RoomNamePrefix+fmt.Sprintf("%04d", i))
 	}
 
 	fmt.Scanln()
